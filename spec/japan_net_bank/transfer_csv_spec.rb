@@ -31,8 +31,8 @@ describe JapanNetBank::TransferCsv do
         csv << row_hash2
       end
 
-      csv_row1    = JapanNetBank::TransferCsv::Row.new(row_hash1).to_a.join(',')
-      csv_row2    = JapanNetBank::TransferCsv::Row.new(row_hash2).to_a.join(',')
+      csv_row1 = JapanNetBank::TransferCsv::Row.new(row_hash1).to_a.join(',')
+      csv_row2 = JapanNetBank::TransferCsv::Row.new(row_hash2).to_a.join(',')
 
       trailer_row = [
           JapanNetBank::TransferCsv::Row::RECORD_TYPE_TRAILER,
