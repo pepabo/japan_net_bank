@@ -5,7 +5,6 @@ describe JapanNetBank::TransferCsv::Row do
   describe '#to_a' do
     let(:row_hash) {
       {
-          record_type:  '1',
           bank_code:    '0123',
           branch_code:  '012',
           account_type: 'ordinary',
@@ -18,7 +17,12 @@ describe JapanNetBank::TransferCsv::Row do
     let(:row) { JapanNetBank::TransferCsv::Row.new(row_hash) }
 
     it 'Row の内容が配列で返ってくる' do
-      expect(row.to_a).to eq ['1', '0123', '012', 'ordinary', '0123456', 'キテコタロウ', '1500']
+      row_array = [
+          JapanNetBank::TransferCsv::Row::RECORD_TYPE_DATA,
+          '0123', '012', 'ordinary', '0123456', 'キテコタロウ', '1500'
+      ]
+
+      expect(row.to_a).to eq row_array
     end
   end
 end
