@@ -43,7 +43,7 @@ Or install it yourself as:
 transfer_data1 = {
     bank_code:    '0123',
     branch_code:  '012',
-    account_type: 'ordinary',
+    account_type: 'ordinary', # ordinary / checking / savings
     number:       '0123456',
     name:         'サトウキテコ',
     amount:       1600,
