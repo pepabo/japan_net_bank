@@ -31,6 +31,8 @@ module JapanNetBank
         @number       = number
         @name         = name
         @amount       = amount
+
+        raise ArgumentError, errors.full_messages unless valid?
       end
 
       def to_a
