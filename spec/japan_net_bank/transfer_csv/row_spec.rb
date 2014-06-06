@@ -143,7 +143,7 @@ describe JapanNetBank::TransferCsv::Row do
         end
       end
 
-      context '少数とき' do
+      context '小数とき' do
         it 'エラーが発生する' do
           row.amount = 1.5
           expect(row).not_to be_valid
