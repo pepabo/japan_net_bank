@@ -8,7 +8,7 @@ module JapanNetBank
         @account_type = account_type
         @number       = number
         @name         = name
-        @amount       = amount
+        @amount       = amount.to_s
       end
 
       def to_a
