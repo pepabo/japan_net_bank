@@ -40,6 +40,31 @@ describe JapanNetBank::TransferCsv::Row do
         end
       end
     end
+
+    describe 'branch_code' do
+      context '3桁の数字のとき' do
+        it 'エラーが発生しない' do
+          row.branch_code = '012'
+          expect(row).to be_valid
+        end
+      end
+
+      context '2桁の数字のとき' do
+        it 'エラーが発生する' do
+          row.branch_code = '01'
+          expect(row).not_to be_valid
+          expect(row.errors[:branch_code]).to be_present
+        end
+      end
+
+      context '3桁のアルファベットのとき' do
+        it 'エラーが発生する' do
+          row.branch_code = 'abc'
+          expect(row).not_to be_valid
+          expect(row.errors[:branch_code]).to be_present
+        end
+      end
+    end
   end
 
   describe '#to_a' do
