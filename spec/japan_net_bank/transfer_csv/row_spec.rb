@@ -84,6 +84,31 @@ describe JapanNetBank::TransferCsv::Row do
         end
       end
     end
+
+    describe 'number' do
+      context '7桁の数字のとき' do
+        it 'エラーが発生しない' do
+          row.number = '0123456'
+          expect(row).to be_valid
+        end
+      end
+
+      context '6桁の数字のとき' do
+        it 'エラーが発生する' do
+          row.number = '012345'
+          expect(row).not_to be_valid
+          expect(row.errors[:number]).to be_present
+        end
+      end
+
+      context '7桁のアルファベットのとき' do
+        it 'エラーが発生する' do
+          row.number = 'abcdefg'
+          expect(row).not_to be_valid
+          expect(row.errors[:number]).to be_present
+        end
+      end
+    end
   end
 
   describe '#to_a' do
