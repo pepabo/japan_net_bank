@@ -1,6 +1,5 @@
 require 'nkf'
 require 'active_model'
-require 'active_support'
 
 module JapanNetBank
   class TransferCsv
