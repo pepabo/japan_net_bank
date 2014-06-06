@@ -3,6 +3,8 @@ require 'japan_net_bank/transfer_csv/row'
 
 module JapanNetBank
   class TransferCsv
+    attr_reader :rows_count, :total_amount
+
     def initialize
       @csv          = CSV.new('', row_sep: "\r\n")
       @rows_count   = 0

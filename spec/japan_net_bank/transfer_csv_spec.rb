@@ -2,31 +2,31 @@ require 'spec_helper'
 require 'japan_net_bank/transfer_csv'
 
 describe JapanNetBank::TransferCsv do
+  let(:transfer_csv) { JapanNetBank::TransferCsv.new }
+
+  let(:row_hash1) {
+    {
+        bank_code:    '0123',
+        branch_code:  '012',
+        account_type: 'ordinary',
+        number:       '0123456',
+        name:         'サトウキテコ',
+        amount:       1600,
+    }
+  }
+
+  let(:row_hash2) {
+    {
+        bank_code:    '0123',
+        branch_code:  '012',
+        account_type: 'ordinary',
+        number:       '0123456',
+        name:         'サトウハナコ',
+        amount:       3200,
+    }
+  }
+
   describe '#generate' do
-    let(:transfer_csv) { JapanNetBank::TransferCsv.new }
-
-    let(:row_hash1) {
-      {
-          bank_code:    '0123',
-          branch_code:  '012',
-          account_type: 'ordinary',
-          number:       '0123456',
-          name:         'サトウキテコ',
-          amount:       1600,
-      }
-    }
-
-    let(:row_hash2) {
-      {
-          bank_code:    '0123',
-          branch_code:  '012',
-          account_type: 'ordinary',
-          number:       '0123456',
-          name:         'サトウハナコ',
-          amount:       3200,
-      }
-    }
-
     context '振込データが正しいとき' do
       it 'CSV 文字列を生成できる' do
         csv_string = transfer_csv.generate do
@@ -65,6 +65,32 @@ describe JapanNetBank::TransferCsv do
           end
         }.to raise_error(ArgumentError)
       end
+    end
+  end
+
+  describe '#rows_count' do
+    before do
+      transfer_csv.generate do
+        transfer_csv << row_hash1
+        transfer_csv << row_hash2
+      end
+    end
+
+    it 'レコード数を取得できる' do
+      expect(transfer_csv.rows_count).to eq 2
+    end
+  end
+
+  describe '#total_amount' do
+    before do
+      transfer_csv.generate do
+        transfer_csv << row_hash1
+        transfer_csv << row_hash2
+      end
+    end
+
+    it '振込金額の合計を取得できる' do
+      expect(transfer_csv.total_amount).to eq 4800
     end
   end
 end
