@@ -15,6 +15,33 @@ describe JapanNetBank::TransferCsv::Row do
 
   let(:row) { JapanNetBank::TransferCsv::Row.new(row_hash) }
 
+  describe 'attributes' do
+    describe 'bank_code' do
+      context '4桁の数字のとき' do
+        it 'エラーが発生しない' do
+          row.bank_code = '0123'
+          expect(row).to be_valid
+        end
+      end
+
+      context '3桁の数字のとき' do
+        it 'エラーが発生する' do
+          row.bank_code = '012'
+          expect(row).not_to be_valid
+          expect(row.errors[:bank_code]).to be_present
+        end
+      end
+
+      context '4桁のアルファベットのとき' do
+        it 'エラーが発生する' do
+          row.bank_code = 'abcd'
+          expect(row).not_to be_valid
+          expect(row.errors[:bank_code]).to be_present
+        end
+      end
+    end
+  end
+
   describe '#to_a' do
     it 'Row の内容が配列で返ってくる' do
       row_array = [

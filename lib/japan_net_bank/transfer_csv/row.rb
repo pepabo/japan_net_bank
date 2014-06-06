@@ -1,10 +1,18 @@
 require 'nkf'
+require 'active_model'
+require 'active_support'
 
 module JapanNetBank
   class TransferCsv
     class Row
+      include ActiveModel::Validations
+
+      attr_accessor :record_type, :bank_code, :branch_code, :account_type, :number, :name, :amount
+
       RECORD_TYPE_DATA    = '1'
       RECORD_TYPE_TRAILER = '2'
+
+      validates :bank_code, format: { with: /\A\d{4}\z/ }
 
       def initialize(record_type: RECORD_TYPE_DATA, bank_code:, branch_code:, account_type:, number:, name:, amount:)
         @record_type  = record_type
