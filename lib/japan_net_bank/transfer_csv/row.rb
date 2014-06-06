@@ -1,3 +1,5 @@
+require 'nkf'
+
 module JapanNetBank
   class TransferCsv
     class Row
@@ -11,7 +13,7 @@ module JapanNetBank
         @account_type = account_type
         @number       = number
         @name         = name
-        @amount       = amount.to_s
+        @amount       = amount
       end
 
       def to_a
@@ -21,8 +23,8 @@ module JapanNetBank
             @branch_code,
             @account_type,
             @number,
-            @name,
-            @amount,
+            NKF.nkf('-w -Z4', @name).encode('Shift_JIS'),
+            @amount.to_s,
         ]
       end
     end
