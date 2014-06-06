@@ -58,13 +58,14 @@ transfer_data2 = {
     amount:       3200,
 }
 
-transfer_csv = JapanNetBank::TransferCsv.generate do |csv|
+transfer_csv = JapanNetBank::TransferCsv.new
+csv_string = transfer_csv.generate do
   [transfer_data1, transfer_data2].each do |transfer_data|
-    csv << transfer_data
+    transfer_csv << transfer_data
   end
 end
 
-puts transfer_csv #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0999,099,1,0999999,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
+puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0999,099,1,0999999,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
 ```
 
 ## Contributing
