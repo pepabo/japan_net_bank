@@ -126,6 +126,31 @@ describe JapanNetBank::TransferCsv::Row do
         end
       end
     end
+
+    describe 'amount' do
+      context '1以上の整数のとき' do
+        it 'エラーが発生しない' do
+          row.amount = 1
+          expect(row).to be_valid
+        end
+      end
+
+      context '0 とき' do
+        it 'エラーが発生する' do
+          row.amount = 0
+          expect(row).not_to be_valid
+          expect(row.errors[:amount]).to be_present
+        end
+      end
+
+      context '少数とき' do
+        it 'エラーが発生する' do
+          row.amount = 1.5
+          expect(row).not_to be_valid
+          expect(row.errors[:amount]).to be_present
+        end
+      end
+    end
   end
 
   describe '#to_a' do

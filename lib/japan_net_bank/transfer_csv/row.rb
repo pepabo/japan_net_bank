@@ -18,6 +18,12 @@ module JapanNetBank
       validates :number, format: { with: /\A\d{7}\z/ }
       validates :name, presence: true
 
+      validates :amount,
+          numericality: {
+              only_integer: true,
+              greater_than_or_equal_to: 1
+          }
+
       def initialize(record_type: RECORD_TYPE_DATA, bank_code:, branch_code:, account_type:, number:, name:, amount:)
         @record_type  = record_type
         @bank_code    = bank_code
