@@ -31,10 +31,11 @@ describe JapanNetBank::TransferCsv do
         csv << row_hash2
       end
 
-      csv_row1 = JapanNetBank::TransferCsv::Row.new(row_hash1).to_a.join(',')
-      csv_row2 = JapanNetBank::TransferCsv::Row.new(row_hash2).to_a.join(',')
+      csv_row1    = JapanNetBank::TransferCsv::Row.new(row_hash1).to_a.join(',')
+      csv_row2    = JapanNetBank::TransferCsv::Row.new(row_hash2).to_a.join(',')
+      trailer_row = ['2', nil, nil, nil, nil, 2, 3200].join(',')
 
-      expect(transfer_csv).to eq csv_row1 + "\r\n" + csv_row2 + "\r\n"
+      expect(transfer_csv).to eq csv_row1 + "\r\n" + csv_row2 + "\r\n" + trailer_row + "\r\n"
     end
   end
 end

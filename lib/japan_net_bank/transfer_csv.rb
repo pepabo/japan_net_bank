@@ -6,6 +6,7 @@ module JapanNetBank
     def self.generate
       transfer_csv = new
       yield transfer_csv
+      transfer_csv.add_trailer_row
       transfer_csv.string
     end
 
@@ -23,6 +24,17 @@ module JapanNetBank
       @row_count    += 1
       @total_amount += row[:amount].to_i
       @csv << JapanNetBank::TransferCsv::Row.new(row).to_a
+    end
+
+    def add_trailer_row
+      return if @row_count.zero?
+      @csv << trailer_row
+    end
+
+    private
+
+    def trailer_row
+      [Row::RECORD_TYPE_TRAILER, nil, nil, nil, nil, @row_count, @total_amount]
     end
   end
 end
