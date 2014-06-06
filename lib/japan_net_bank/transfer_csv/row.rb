@@ -14,6 +14,7 @@ module JapanNetBank
 
       validates :bank_code, format: { with: /\A\d{4}\z/ }
       validates :branch_code, format: { with: /\A\d{3}\z/ }
+      validates :account_type, inclusion: { in: %w(ordinary checking savings) }
 
       def initialize(record_type: RECORD_TYPE_DATA, bank_code:, branch_code:, account_type:, number:, name:, amount:)
         @record_type  = record_type

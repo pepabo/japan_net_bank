@@ -65,6 +65,25 @@ describe JapanNetBank::TransferCsv::Row do
         end
       end
     end
+
+    describe 'account_type' do
+      context 'ordinary, checking, savings のいずれかのとき' do
+        it 'エラーが発生しない' do
+          %w(ordinary checking savings).each do |type|
+            row.account_type = type
+            expect(row).to be_valid
+          end
+        end
+      end
+
+      context 'ordinary, checking, savings の以外のとき' do
+        it 'エラーが発生する' do
+          row.account_type = 'invalid_account_type'
+          expect(row).not_to be_valid
+          expect(row.errors[:account_type]).to be_present
+        end
+      end
+    end
   end
 
   describe '#to_a' do
