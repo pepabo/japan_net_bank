@@ -12,7 +12,7 @@ module JapanNetBank
 
     def initialize
       @csv          = CSV.new('', row_sep: "\r\n")
-      @row_count    = 0
+      @rows_count   = 0
       @total_amount = 0
     end
 
@@ -21,20 +21,20 @@ module JapanNetBank
     end
 
     def <<(row)
-      @row_count    += 1
+      @rows_count   += 1
       @total_amount += row[:amount].to_i
       @csv << JapanNetBank::TransferCsv::Row.new(row).to_a
     end
 
     def add_trailer_row
-      return if @row_count.zero?
+      return if @rows_count.zero?
       @csv << trailer_row
     end
 
     private
 
     def trailer_row
-      [Row::RECORD_TYPE_TRAILER, nil, nil, nil, nil, @row_count, @total_amount]
+      [Row::RECORD_TYPE_TRAILER, nil, nil, nil, nil, @rows_count, @total_amount]
     end
   end
 end
