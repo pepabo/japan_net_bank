@@ -19,7 +19,7 @@ describe JapanNetBank::TransferCsv::Row do
     it 'Row の内容が配列で返ってくる' do
       row_array = [
           JapanNetBank::TransferCsv::Row::RECORD_TYPE_DATA,
-          '0123', '012', 'ordinary', '0123456', 'ｻﾄｳｷﾃｺ'.encode('Shift_JIS'), '1600'
+          '0123', '012', '1', '0123456', 'ｻﾄｳｷﾃｺ'.encode('Shift_JIS'), '1600'
       ]
 
       expect(row.to_a).to eq row_array

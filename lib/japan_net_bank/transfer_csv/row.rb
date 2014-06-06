@@ -21,7 +21,7 @@ module JapanNetBank
             @record_type,
             @bank_code,
             @branch_code,
-            @account_type,
+            account_type_code,
             @number,
             convert_to_hankaku_katakana(@name).encode('Shift_JIS'),
             @amount.to_s,
@@ -32,6 +32,17 @@ module JapanNetBank
 
       def convert_to_hankaku_katakana(string)
         NKF.nkf('-w -Z4', string)
+      end
+
+      def account_type_code
+        case @account_type
+        when 'ordinary'
+          '1'
+        when 'checking'
+          '2'
+        when 'savings'
+          '4'
+        end
       end
     end
   end
