@@ -2,7 +2,9 @@ require 'spec_helper'
 require 'japan_net_bank/transfer_csv'
 
 describe JapanNetBank::TransferCsv do
-  describe 'self.generate' do
+  describe '#generate' do
+    let(:transfer_csv) { JapanNetBank::TransferCsv.new }
+
     let(:row_hash1) {
       {
           bank_code:    '0123',
@@ -27,9 +29,9 @@ describe JapanNetBank::TransferCsv do
 
     context '振込データが正しいとき' do
       it 'CSV 文字列を生成できる' do
-        transfer_csv = JapanNetBank::TransferCsv.generate do |csv|
-          csv << row_hash1
-          csv << row_hash2
+        csv_string = transfer_csv.generate do
+          transfer_csv << row_hash1
+          transfer_csv << row_hash2
         end
 
         csv_row1 = JapanNetBank::TransferCsv::Row.new(row_hash1).to_a.join(',')
@@ -40,7 +42,7 @@ describe JapanNetBank::TransferCsv do
             nil, nil, nil, nil, 2, 4800
         ].join(',')
 
-        expect(transfer_csv).to eq csv_row1 + "\r\n" + csv_row2 + "\r\n" + trailer_row + "\r\n"
+        expect(csv_string).to eq csv_row1 + "\r\n" + csv_row2 + "\r\n" + trailer_row + "\r\n"
       end
     end
 
@@ -58,8 +60,8 @@ describe JapanNetBank::TransferCsv do
 
       it 'ArgumentError が発生する' do
         expect {
-          JapanNetBank::TransferCsv.generate do |csv|
-            csv << invalid_row_hash
+          transfer_csv.generate do
+            transfer_csv << invalid_row_hash
           end
         }.to raise_error(ArgumentError)
       end
