@@ -109,6 +109,23 @@ describe JapanNetBank::TransferCsv::Row do
         end
       end
     end
+
+    describe 'name' do
+      context '存在するとき' do
+        it 'エラーが発生しない' do
+          row.name = 'サトウキテコ'
+          expect(row).to be_valid
+        end
+      end
+
+      context '空文字列のとき' do
+        it 'エラーが発生する' do
+          row.name = ''
+          expect(row).not_to be_valid
+          expect(row.errors[:name]).to be_present
+        end
+      end
+    end
   end
 
   describe '#to_a' do
