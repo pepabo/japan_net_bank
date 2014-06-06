@@ -23,15 +23,15 @@ module JapanNetBank
             @branch_code,
             @account_type,
             @number,
-            convert_to_hankaku_shift_jis(@name),
+            convert_to_hankaku_katakana(@name).encode('Shift_JIS'),
             @amount.to_s,
         ]
       end
 
       private
 
-      def convert_to_hankaku_shift_jis(string)
-        NKF.nkf('-w -Z4', string).encode('Shift_JIS')
+      def convert_to_hankaku_katakana(string)
+        NKF.nkf('-w -Z4', string)
       end
     end
   end

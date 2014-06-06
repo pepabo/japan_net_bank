@@ -8,8 +8,8 @@ describe JapanNetBank::TransferCsv::Row do
         branch_code:  '012',
         account_type: 'ordinary',
         number:       '0123456',
-        name:         'キテコタロウ',
-        amount:       1500,
+        name:         'サトウキテコ',
+        amount:       1600,
     }
   }
 
@@ -19,16 +19,16 @@ describe JapanNetBank::TransferCsv::Row do
     it 'Row の内容が配列で返ってくる' do
       row_array = [
           JapanNetBank::TransferCsv::Row::RECORD_TYPE_DATA,
-          '0123', '012', 'ordinary', '0123456', 'ｷﾃｺﾀﾛｳ'.encode('Shift_JIS'), '1500'
+          '0123', '012', 'ordinary', '0123456', 'ｻﾄｳｷﾃｺ'.encode('Shift_JIS'), '1600'
       ]
 
       expect(row.to_a).to eq row_array
     end
   end
 
-  describe '#convert_to_hankaku_shift_jis' do
-    it '半角カタカナ ShiftJIS に変換する' do
-      expect(row.send(:convert_to_hankaku_shift_jis, 'キテコタロウ')).to eq 'ｷﾃｺﾀﾛｳ'.encode('Shift_JIS')
+  describe '#convert_to_hankaku_katakana' do
+    it '半角カタカナに変換する' do
+      expect(row.send(:convert_to_hankaku_katakana, 'サトウキテコ')).to eq 'ｻﾄｳｷﾃｺ'
     end
   end
 end
