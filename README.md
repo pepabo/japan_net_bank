@@ -60,6 +60,7 @@ transfer_data = [
 ]
 
 csv_string = JapanNetBank::Transfer.new(transfer_data).to_csv
+# or csv_string = JNB::Transfer.new(transfer_data).to_csv
 
 puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0999,099,1,0999999,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
 ```
