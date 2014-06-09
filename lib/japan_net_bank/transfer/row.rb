@@ -2,7 +2,7 @@ require 'nkf'
 require 'active_model'
 
 module JapanNetBank
-  class TransferCsv
+  class Transfer
     class Row
       include ActiveModel::Validations
 

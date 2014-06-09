@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'japan_net_bank/transfer_csv'
+require 'japan_net_bank/transfer'
 
-describe JapanNetBank::TransferCsv do
-  let(:transfer_csv) { JapanNetBank::TransferCsv.new }
+describe JapanNetBank::Transfer do
+  let(:transfer) { JapanNetBank::Transfer.new }
 
   let(:row_hash1) {
     {
@@ -29,16 +29,16 @@ describe JapanNetBank::TransferCsv do
   describe '#generate' do
     context '振込データが正しいとき' do
       it 'CSV 文字列を生成できる' do
-        csv_string = transfer_csv.generate do
-          transfer_csv << row_hash1
-          transfer_csv << row_hash2
+        csv_string = transfer.generate do
+          transfer << row_hash1
+          transfer << row_hash2
         end
 
-        csv_row1 = JapanNetBank::TransferCsv::Row.new(row_hash1).to_a.join(',')
-        csv_row2 = JapanNetBank::TransferCsv::Row.new(row_hash2).to_a.join(',')
+        csv_row1 = JapanNetBank::Transfer::Row.new(row_hash1).to_a.join(',')
+        csv_row2 = JapanNetBank::Transfer::Row.new(row_hash2).to_a.join(',')
 
         trailer_row = [
-            JapanNetBank::TransferCsv::Row::RECORD_TYPE_TRAILER,
+            JapanNetBank::Transfer::Row::RECORD_TYPE_TRAILER,
             nil, nil, nil, nil, 2, 4800
         ].join(',')
 
@@ -60,8 +60,8 @@ describe JapanNetBank::TransferCsv do
 
       it 'ArgumentError が発生する' do
         expect {
-          transfer_csv.generate do
-            transfer_csv << invalid_row_hash
+          transfer.generate do
+            transfer << invalid_row_hash
           end
         }.to raise_error(ArgumentError)
       end
@@ -70,27 +70,27 @@ describe JapanNetBank::TransferCsv do
 
   describe '#rows_count' do
     before do
-      transfer_csv.generate do
-        transfer_csv << row_hash1
-        transfer_csv << row_hash2
+      transfer.generate do
+        transfer << row_hash1
+        transfer << row_hash2
       end
     end
 
     it 'レコード数を取得できる' do
-      expect(transfer_csv.rows_count).to eq 2
+      expect(transfer.rows_count).to eq 2
     end
   end
 
   describe '#total_amount' do
     before do
-      transfer_csv.generate do
-        transfer_csv << row_hash1
-        transfer_csv << row_hash2
+      transfer.generate do
+        transfer << row_hash1
+        transfer << row_hash2
       end
     end
 
     it '振込金額の合計を取得できる' do
-      expect(transfer_csv.total_amount).to eq 4800
+      expect(transfer.total_amount).to eq 4800
     end
   end
 end

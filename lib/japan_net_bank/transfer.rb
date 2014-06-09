@@ -1,8 +1,8 @@
 require 'csv'
-require 'japan_net_bank/transfer_csv/row'
+require 'japan_net_bank/transfer/row'
 
 module JapanNetBank
-  class TransferCsv
+  class Transfer
     attr_reader :rows_count, :total_amount
 
     def initialize
@@ -20,7 +20,7 @@ module JapanNetBank
     def <<(row)
       @rows_count   += 1
       @total_amount += row[:amount].to_i
-      @csv << JapanNetBank::TransferCsv::Row.new(row).to_a
+      @csv << JapanNetBank::Transfer::Row.new(row).to_a
     end
 
     def add_trailer_row
