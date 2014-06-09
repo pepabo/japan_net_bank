@@ -3,36 +3,36 @@ require 'japan_net_bank/transfer/row'
 
 module JapanNetBank
   class Transfer
-    attr_reader :rows_count, :total_amount
+    attr_reader :rows_count, :total_amount, :rows
 
-    def initialize
-      @csv          = CSV.new('', row_sep: "\r\n")
+    def initialize(rows)
+      @rows         = []
       @rows_count   = 0
       @total_amount = 0
-    end
 
-    def generate
-      yield
+      rows.each do |row|
+        append_row(row)
+      end
+
       add_trailer_row
-      string
     end
 
-    def <<(row)
+    def to_csv
+      # TODO: あとで実装する
+    end
+
+    private
+
+    def append_row(row)
       @rows_count   += 1
       @total_amount += row[:amount].to_i
-      @csv << JapanNetBank::Transfer::Row.new(row).to_a
+      @rows << JapanNetBank::Transfer::Row.new(row).to_a
     end
 
     def add_trailer_row
       return if @rows_count.zero?
-      @csv << trailer_row
+      @rows << trailer_row
     end
-
-    def string
-      @csv.string
-    end
-
-    private
 
     def trailer_row
       [Row::RECORD_TYPE_TRAILER, nil, nil, nil, nil, @rows_count, @total_amount]
