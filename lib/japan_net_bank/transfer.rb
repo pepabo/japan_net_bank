@@ -1,5 +1,5 @@
-require 'csv'
 require 'japan_net_bank/transfer/row'
+require 'japan_net_bank/transfer/csv'
 
 module JapanNetBank
   class Transfer
@@ -18,7 +18,13 @@ module JapanNetBank
     end
 
     def to_csv
-      # TODO: あとで実装する
+      csv_string = JapanNetBank::Transfer::CSV.generate do |csv|
+        @rows.each do |row|
+          csv << row
+        end
+      end
+
+      csv_string
     end
 
     private
