@@ -1,0 +1,13 @@
+require 'csv'
+
+module JapanNetBank
+  class Transfer
+    class CSV
+      def self.generate
+        csv = ::CSV.new('', row_sep: "\r\n")
+        yield csv
+        csv.string
+      end
+    end
+  end
+end
