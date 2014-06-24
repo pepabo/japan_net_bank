@@ -23,7 +23,7 @@ module JapanNetBank
               greater_than_or_equal_to: 1
           }
 
-      def initialize(record_type: RECORD_TYPE_DATA, bank_code:, branch_code:, account_type:, number:, name:, amount:)
+      def initialize(record_type: RECORD_TYPE_DATA, bank_code: nil, branch_code: nil, account_type: nil, number: nil, name: nil, amount: nil)
         @record_type  = record_type
         @bank_code    = bank_code
         @branch_code  = branch_code
