@@ -28,7 +28,10 @@ module JapanNetBank
       end
 
       def encode_to_utf8(string)
-        NKF.nkf('-w -X', string)
+        # 単純に下記だと、"カ)" の部分が落ちてしまうため
+        # NKF.nkf('-w -X', string)
+
+        NKF.nkf('-w -X', string.encode('UTF-8', NKF.guess(string).to_s))
       end
     end
 

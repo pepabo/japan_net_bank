@@ -72,7 +72,7 @@ describe JapanNetBank::Transfer do
       expect(transfer_row.branch_code).to eq '001'
       expect(transfer_row.account_type).to eq 'ordinary'
       expect(transfer_row.number).to eq '1111111'
-      expect(transfer_row.name).to eq 'ニホンシヨウジ'
+      expect(transfer_row.name).to eq 'カ)ニホンシヨウジ'
       expect(transfer_row.amount).to eq '1000'
     end
   end
@@ -80,7 +80,7 @@ describe JapanNetBank::Transfer do
   describe 'self.encode_to_utf8' do
     context 'Shift_JIS の文字列を渡したとき' do
       it 'UTF-8 の文字列を取得できる（全角カタカナ）' do
-        expect(JapanNetBank::Transfer.send(:encode_to_utf8, transfer_data)).to match 'ニホンシヨウジ'
+        expect(JapanNetBank::Transfer.send(:encode_to_utf8, transfer_data)).to match 'カ\)ニホンシヨウジ'
       end
     end
 
@@ -88,8 +88,8 @@ describe JapanNetBank::Transfer do
       let(:utf8_string) { transfer_data.encode('UTF-8', 'Shift_JIS') }
 
       it 'UTF-8 の文字列を取得できる（全角カタカナ）' do
-        expect(utf8_string).to match 'ﾆﾎﾝｼﾖｳｼﾞ'
-        expect(JapanNetBank::Transfer.send(:encode_to_utf8, utf8_string)).to match 'ニホンシヨウジ'
+        expect(utf8_string).to match /ｶ\)ﾆﾎﾝｼﾖｳｼﾞ/
+        expect(JapanNetBank::Transfer.send(:encode_to_utf8, utf8_string)).to match 'カ\)ニホンシヨウジ'
       end
     end
   end
