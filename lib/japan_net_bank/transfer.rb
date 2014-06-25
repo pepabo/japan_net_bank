@@ -52,7 +52,7 @@ module JapanNetBank
     end
 
     def encode_to_utf8(string)
-      NKF.nkf('-w', string)
+      NKF.nkf('-w -X', string)
     end
   end
 end
