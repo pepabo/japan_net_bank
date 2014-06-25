@@ -67,6 +67,23 @@ describe JapanNetBank::Transfer do
     it 'CSV データを読み込むことができる'
   end
 
+  describe 'self.encode_to_utf8' do
+    context 'Shift_JIS の文字列を渡したとき' do
+      it 'UTF-8 の文字列を取得できる（全角カタカナ）' do
+        expect(JapanNetBank::Transfer.send(:encode_to_utf8, transfer_data)).to match 'ニホンシヨウジ'
+      end
+    end
+
+    context '既に UTF-8 に変換した文字列を渡したとき' do
+      let(:utf8_string) { transfer_data.encode('UTF-8', 'Shift_JIS') }
+
+      it 'UTF-8 の文字列を取得できる（全角カタカナ）' do
+        expect(utf8_string).to match 'ﾆﾎﾝｼﾖｳｼﾞ'
+        expect(JapanNetBank::Transfer.send(:encode_to_utf8, utf8_string)).to match 'ニホンシヨウジ'
+      end
+    end
+  end
+
   describe '#rows_count' do
     it 'レコード数を取得できる' do
       expect(transfer.rows_count).to eq 2
@@ -90,23 +107,6 @@ describe JapanNetBank::Transfer do
       ].join(',')
 
       expect(transfer.to_csv).to eq csv_row1 + "\r\n" + csv_row2 + "\r\n" + csv_trailer_row + "\r\n"
-    end
-  end
-
-  describe '#encode_to_utf8' do
-    context 'Shift_JIS の文字列を渡したとき' do
-      it 'UTF-8 の文字列を取得できる（全角カタカナ）' do
-        expect(transfer.send(:encode_to_utf8, transfer_data)).to match 'ニホンシヨウジ'
-      end
-    end
-
-    context '既に UTF-8 に変換した文字列を渡したとき' do
-      let(:utf8_string) { transfer_data.encode('UTF-8', 'Shift_JIS') }
-
-      it 'UTF-8 の文字列を取得できる（全角カタカナ）' do
-        expect(utf8_string).to match 'ﾆﾎﾝｼﾖｳｼﾞ'
-        expect(transfer.send(:encode_to_utf8, utf8_string)).to match 'ニホンシヨウジ'
-      end
     end
   end
 end
