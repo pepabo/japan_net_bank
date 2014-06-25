@@ -46,9 +46,9 @@ module JapanNetBank
     private
 
     def append_row(row)
+      @rows << JapanNetBank::Transfer::Row.new(row).to_a
       @rows_count   += 1
       @total_amount += row[:amount].to_i
-      @rows << JapanNetBank::Transfer::Row.new(row).to_a
     end
 
     def add_trailer_row
