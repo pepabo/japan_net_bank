@@ -29,7 +29,17 @@ describe JapanNetBank::Transfer do
 
   describe 'self.fee_for' do
     context 'ジャパンネット銀行への振込のとき' do
-      it '振込手数料を取得できる'
+      let(:transfer) {
+        {
+            bank_code: JapanNetBank::BANK_CODE,
+            amount:    3200,
+        }
+      }
+
+      it '振込手数料を取得できる' do
+        transfer_fee = JapanNetBank::Transfer.fee_for(transfer[:bank_code], transfer[:amount])
+        expect(transfer_fee).to eq JapanNetBank::Transfer::FEE_TO_JAPAN_NET_BANK
+      end
     end
 
     context 'ジャパンネット銀行以外への振込のとき' do

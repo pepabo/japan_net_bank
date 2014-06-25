@@ -5,6 +5,16 @@ module JapanNetBank
   class Transfer
     attr_reader :rows_count, :total_amount, :rows
 
+    FEE_TO_JAPAN_NET_BANK          = 52
+    FEE_FOR_CREDIT_UNDER_30_000    = 172
+    FEE_FOR_CREDIT_AND_OVER_30_000 = 270
+
+    def self.fee_for(bank_code, credit)
+      if bank_code == JapanNetBank::BANK_CODE
+        FEE_TO_JAPAN_NET_BANK
+      end
+    end
+
     def initialize(rows)
       @rows         = []
       @rows_count   = 0
