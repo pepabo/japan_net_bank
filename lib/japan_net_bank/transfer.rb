@@ -12,6 +12,10 @@ module JapanNetBank
     def self.fee_for(bank_code, credit)
       if bank_code == JapanNetBank::BANK_CODE
         FEE_TO_JAPAN_NET_BANK
+      elsif credit < 30_000
+        FEE_FOR_CREDIT_UNDER_30_000
+      elsif credit >= 30_000
+        FEE_FOR_CREDIT_AND_OVER_30_000
       end
     end
 
