@@ -13,7 +13,7 @@ module JapanNetBank
               record_type:  row[0],
               bank_code:    sprintf('%04d', row[1]),
               branch_code:  sprintf('%03d', row[2]),
-              account_type: 'ordinary',
+              account_type: JapanNetBank::Transfer::Row::ACCOUNT_TYPES[row[3]],
               number:       sprintf('%07d', row[4]),
               name:         row[5],
               amount:       row[6],

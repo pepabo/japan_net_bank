@@ -11,6 +11,12 @@ module JapanNetBank
       RECORD_TYPE_DATA    = '1'
       RECORD_TYPE_TRAILER = '2'
 
+      ACCOUNT_TYPES = {
+          '1' => 'ordinary',
+          '2' => 'checking',
+          '4' => 'savings',
+      }
+
       validates :bank_code, format: { with: /\A\d{4}\z/ }
       validates :branch_code, format: { with: /\A\d{3}\z/ }
       validates :account_type, inclusion: { in: %w(ordinary checking savings) }
