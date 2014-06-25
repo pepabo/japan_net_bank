@@ -1,5 +1,6 @@
 require 'japan_net_bank/transfer/row'
 require 'japan_net_bank/transfer/csv'
+require 'nkf'
 
 module JapanNetBank
   class Transfer
@@ -27,6 +28,12 @@ module JapanNetBank
       csv_string
     end
 
+    def parse_csv(data)
+      encode_to_utf8(data)
+
+      # TODO: あとで実装する
+    end
+
     private
 
     def append_row(row)
@@ -42,6 +49,10 @@ module JapanNetBank
 
     def trailer_row
       [Row::RECORD_TYPE_TRAILER, nil, nil, nil, nil, @rows_count, @total_amount]
+    end
+
+    def encode_to_utf8(string)
+      NKF.nkf('-w', string)
     end
   end
 end

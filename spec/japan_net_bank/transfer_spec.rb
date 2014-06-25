@@ -26,6 +26,7 @@ describe JapanNetBank::Transfer do
 
   let(:rows) { [row_hash1, row_hash2] }
   let(:transfer) { JapanNetBank::Transfer.new(rows) }
+  let(:transfer_data) { File.read('spec/files/sample_jnb.csv') } # Shift_JIS
 
   describe '#initialize' do
     context '振込データが正しいとき' do
@@ -62,6 +63,10 @@ describe JapanNetBank::Transfer do
     end
   end
 
+  describe 'self.parse_csv' do
+    it 'CSV データを読み込むことができる'
+  end
+
   describe '#rows_count' do
     it 'レコード数を取得できる' do
       expect(transfer.rows_count).to eq 2
@@ -85,6 +90,14 @@ describe JapanNetBank::Transfer do
       ].join(',')
 
       expect(transfer.to_csv).to eq csv_row1 + "\r\n" + csv_row2 + "\r\n" + csv_trailer_row + "\r\n"
+    end
+  end
+
+  describe '#encode_to_utf8' do
+    context 'Shift_JIS の文字列を渡したとき' do
+      it 'UTF-8 の文字列を取得できる' do
+        expect(transfer.send(:encode_to_utf8, transfer_data)).to match 'ニホンシヨウジ'
+      end
     end
   end
 end
