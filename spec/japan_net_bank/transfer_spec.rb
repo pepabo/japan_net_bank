@@ -95,8 +95,17 @@ describe JapanNetBank::Transfer do
 
   describe '#encode_to_utf8' do
     context 'Shift_JIS の文字列を渡したとき' do
-      it 'UTF-8 の文字列を取得できる' do
+      it 'UTF-8 の文字列を取得できる（全角カタカナ）' do
         expect(transfer.send(:encode_to_utf8, transfer_data)).to match 'ニホンシヨウジ'
+      end
+    end
+
+    context '既に UTF-8 に変換した文字列を渡したとき' do
+      let(:utf8_string) { transfer_data.encode('UTF-8', 'Shift_JIS') }
+
+      it 'UTF-8 の文字列を取得できる（全角カタカナ）' do
+        expect(utf8_string).to match 'ﾆﾎﾝｼﾖｳｼﾞ'
+        expect(transfer.send(:encode_to_utf8, utf8_string)).to match 'ニホンシヨウジ'
       end
     end
   end
