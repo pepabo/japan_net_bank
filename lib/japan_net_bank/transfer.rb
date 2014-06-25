@@ -6,9 +6,26 @@ module JapanNetBank
   class Transfer
     class << self
       def parse_csv(csv_string)
+        parsed_data = JapanNetBank::Transfer::CSV.parse(encode_to_utf8(csv_string))
+
+        select_data_records(parsed_data).map { |row|
+          JapanNetBank::Transfer::Row.new(
+              record_type:  row[0],
+              bank_code:    sprintf('%04d', row[1]),
+              branch_code:  sprintf('%03d', row[2]),
+              account_type: 'ordinary',
+              number:       sprintf('%07d', row[4]),
+              name:         row[5],
+              amount:       row[6],
+          )
+        }
       end
 
       private
+
+      def select_data_records(rows)
+        rows.select { |row| row[0] == JapanNetBank::Transfer::Row::RECORD_TYPE_DATA }
+      end
 
       def encode_to_utf8(string)
         NKF.nkf('-w -X', string)
@@ -38,7 +55,6 @@ module JapanNetBank
 
       csv_string
     end
-
 
     private
 

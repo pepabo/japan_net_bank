@@ -8,6 +8,10 @@ module JapanNetBank
         yield csv
         csv.string
       end
+
+      def self.parse(csv_string)
+        ::CSV.parse(csv_string)
+      end
     end
   end
 end

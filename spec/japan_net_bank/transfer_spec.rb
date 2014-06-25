@@ -64,7 +64,17 @@ describe JapanNetBank::Transfer do
   end
 
   describe 'self.parse_csv' do
-    it 'CSV データを読み込むことができる'
+    it 'CSV データを読み込むことができる' do
+      transfer_row = JapanNetBank::Transfer.parse_csv(transfer_data).first
+
+      expect(transfer_row.record_type).to eq '1'
+      expect(transfer_row.bank_code).to eq '0033'
+      expect(transfer_row.branch_code).to eq '001'
+      expect(transfer_row.account_type).to eq 'ordinary'
+      expect(transfer_row.number).to eq '1111111'
+      expect(transfer_row.name).to eq 'ニホンシヨウジ'
+      expect(transfer_row.amount).to eq '1000'
+    end
   end
 
   describe 'self.encode_to_utf8' do
