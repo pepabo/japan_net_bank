@@ -29,45 +29,23 @@ describe JapanNetBank::Transfer do
 
   describe 'self.fee_for' do
     context 'ジャパンネット銀行への振込のとき' do
-      let(:transfer) {
-        {
-            bank_code: JapanNetBank::BANK_CODE,
-            amount:    3200,
-        }
-      }
-
       it '振込手数料を取得できる' do
-        transfer_fee = JapanNetBank::Transfer.fee_for(transfer[:bank_code], transfer[:amount])
+        transfer_fee = JapanNetBank::Transfer.fee_for(JapanNetBank::BANK_CODE, 3200)
         expect(transfer_fee).to eq JapanNetBank::Transfer::FEE_TO_JAPAN_NET_BANK
       end
     end
 
     context 'ジャパンネット銀行以外への振込のとき' do
-
       context '30,000円未満の振込のとき' do
-        let(:transfer) {
-          {
-              bank_code: '0123',
-              amount:    29_999,
-          }
-        }
-
         it '振込手数料を取得できる' do
-          transfer_fee = JapanNetBank::Transfer.fee_for(transfer[:bank_code], transfer[:amount])
+          transfer_fee = JapanNetBank::Transfer.fee_for('0123', 29_999)
           expect(transfer_fee).to eq JapanNetBank::Transfer::FEE_FOR_CREDIT_UNDER_30_000
         end
       end
 
       context '30,000円以上の振込のとき' do
-        let(:transfer) {
-          {
-              bank_code: '0123',
-              amount:    30_000,
-          }
-        }
-
         it '振込手数料を取得できる' do
-          transfer_fee = JapanNetBank::Transfer.fee_for(transfer[:bank_code], transfer[:amount])
+          transfer_fee = JapanNetBank::Transfer.fee_for('0123', 30_000)
           expect(transfer_fee).to eq JapanNetBank::Transfer::FEE_FOR_CREDIT_AND_OVER_30_000
         end
       end
