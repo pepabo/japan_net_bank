@@ -76,9 +76,8 @@ puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0999,099,
 ### 振込手数料を算出
 
 ```ruby
-transfer_record = { bank_code: '0123', amount: 30_000 }
-transfer_fee = JapanNetBank::Transfer.fee_for(transfer_record[:bank_code], transfer_record[:amount])
-# or JNB::Transfer.fee_for(transfer_record[:bank_code], transfer_record[:amount])
+transfer_fee = JapanNetBank::Transfer.fee_for(bank_code: '0123', amount: 30_000)
+# or JNB::Transfer.fee_for(bank_code: '0123', amount: 30_000)
 
 puts transfer_fee #=> 270
 ```
