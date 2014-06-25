@@ -5,7 +5,7 @@ module JapanNetBank
   class Transfer
     attr_reader :rows_count, :total_amount, :rows
 
-    FEE_TO_JAPAN_NET_BANK          = 52
+    FEE_TO_JAPAN_NET_BANK          = 54
     FEE_FOR_AMOUNT_UNDER_30_000    = 172
     FEE_FOR_AMOUNT_AND_OVER_30_000 = 270
 
