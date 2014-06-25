@@ -6,18 +6,18 @@ module JapanNetBank
     attr_reader :rows_count, :total_amount, :rows
 
     FEE_TO_JAPAN_NET_BANK          = 52
-    FEE_FOR_CREDIT_UNDER_30_000    = 172
-    FEE_FOR_CREDIT_AND_OVER_30_000 = 270
+    FEE_FOR_AMOUNT_UNDER_30_000    = 172
+    FEE_FOR_AMOUNT_AND_OVER_30_000 = 270
 
-    def self.fee_for(bank_code: nil, credit: nil)
-      raise ArgumentError if bank_code.nil? || credit.nil?
+    def self.fee_for(bank_code: nil, amount: nil)
+      raise ArgumentError if bank_code.nil? || amount.nil?
 
       if bank_code == JapanNetBank::BANK_CODE
         FEE_TO_JAPAN_NET_BANK
-      elsif credit < 30_000
-        FEE_FOR_CREDIT_UNDER_30_000
-      elsif credit >= 30_000
-        FEE_FOR_CREDIT_AND_OVER_30_000
+      elsif amount < 30_000
+        FEE_FOR_AMOUNT_UNDER_30_000
+      elsif amount >= 30_000
+        FEE_FOR_AMOUNT_AND_OVER_30_000
       end
     end
 
