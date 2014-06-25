@@ -27,6 +27,22 @@ describe JapanNetBank::Transfer do
   let(:rows) { [row_hash1, row_hash2] }
   let(:transfer) { JapanNetBank::Transfer.new(rows) }
 
+  describe 'self.fee_for' do
+    context 'ジャパンネット銀行への振込のとき' do
+      it '振込手数料を取得できる'
+    end
+
+    context 'ジャパンネット銀行以外への振込のとき' do
+      context '30,000円以上の振込のとき' do
+        it '振込手数料を取得できる'
+      end
+
+      context '30,000円未満の振込のとき' do
+        it '振込手数料を取得できる'
+      end
+    end
+  end
+
   describe '#initialize' do
     context '振込データが正しいとき' do
       it 'トレーラー行が追加されたデータを生成できる' do
