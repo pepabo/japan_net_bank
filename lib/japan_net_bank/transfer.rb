@@ -12,7 +12,7 @@ module JapanNetBank
           transfer.append_row(row)
         end
 
-        transfer.add_trailer_row
+        transfer.append_trailer_row
 
         transfer
       end
@@ -71,7 +71,7 @@ module JapanNetBank
       @rows << JapanNetBank::Transfer::Row.new(row).to_a
     end
 
-    def add_trailer_row
+    def append_trailer_row
       return if @rows_count.zero?
       @rows << trailer_row
     end
