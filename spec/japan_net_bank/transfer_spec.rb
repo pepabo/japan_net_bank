@@ -24,22 +24,22 @@ describe JapanNetBank::Transfer do
     }
   }
 
-  let(:rows) { [row_hash1, row_hash2] }
-  let(:transfer) { JapanNetBank::Transfer.generate(rows) }
+  let(:row_hashes) { [row_hash1, row_hash2] }
+  let(:transfer) { JapanNetBank::Transfer.generate(row_hashes) }
   let(:transfer_data) { File.read('spec/files/sample_jnb.csv') } # Shift_JIS
 
   describe 'self.generate' do
     context '振込データが正しいとき' do
       it 'データ行とトレーラー行が追加されたデータを生成できる' do
-        row1        = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::DataRow::RECORD_TYPE }
+        data_row1   = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::DataRow::RECORD_TYPE }
         trailer_row = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::TrailerRow::RECORD_TYPE }
 
-        expect(row1.bank_code).to eq '0123'
-        expect(row1.branch_code).to eq '012'
-        expect(row1.account_type).to eq 'ordinary'
-        expect(row1.number).to eq '0123456'
-        expect(row1.name).to eq 'サトウキテコ'
-        expect(row1.amount).to eq 1600
+        expect(data_row1.bank_code).to eq '0123'
+        expect(data_row1.branch_code).to eq '012'
+        expect(data_row1.account_type).to eq 'ordinary'
+        expect(data_row1.number).to eq '0123456'
+        expect(data_row1.name).to eq 'サトウキテコ'
+        expect(data_row1.amount).to eq 1600
 
         expect(trailer_row.rows_count).to eq 2
         expect(trailer_row.total_amount).to eq 4800
@@ -68,15 +68,15 @@ describe JapanNetBank::Transfer do
 
   describe 'self.parse_csv' do
     it 'CSV データを読み込むことができる' do
-      transfer_row = JapanNetBank::Transfer.parse_csv(transfer_data).rows.first
+      row1 = JapanNetBank::Transfer.parse_csv(transfer_data).rows.first
 
-      expect(transfer_row.record_type).to eq '1'
-      expect(transfer_row.bank_code).to eq '0033'
-      expect(transfer_row.branch_code).to eq '001'
-      expect(transfer_row.account_type).to eq 'ordinary'
-      expect(transfer_row.number).to eq '1111111'
-      expect(transfer_row.name).to eq 'カ)ニホンシヨウジ'
-      expect(transfer_row.amount).to eq '1000'
+      expect(row1.record_type).to eq '1'
+      expect(row1.bank_code).to eq '0033'
+      expect(row1.branch_code).to eq '001'
+      expect(row1.account_type).to eq 'ordinary'
+      expect(row1.number).to eq '1111111'
+      expect(row1.name).to eq 'カ)ニホンシヨウジ'
+      expect(row1.amount).to eq '1000'
     end
   end
 
@@ -111,15 +111,15 @@ describe JapanNetBank::Transfer do
 
   describe '#to_csv' do
     it 'CSV 文字列を取得できる' do
-      csv_row1 = JapanNetBank::Transfer::DataRow.new(row_hash1).to_a.join(',')
-      csv_row2 = JapanNetBank::Transfer::DataRow.new(row_hash2).to_a.join(',')
+      row_array1 = JapanNetBank::Transfer::DataRow.new(row_hash1).to_a.join(',')
+      row_array2 = JapanNetBank::Transfer::DataRow.new(row_hash2).to_a.join(',')
 
-      csv_trailer_row = [
+      trailer_row_array = [
           JapanNetBank::Transfer::TrailerRow::RECORD_TYPE,
           nil, nil, nil, nil, 2, 4800
       ].join(',')
 
-      expect(transfer.to_csv).to eq csv_row1 + "\r\n" + csv_row2 + "\r\n" + csv_trailer_row + "\r\n"
+      expect(transfer.to_csv).to eq row_array1 + "\r\n" + row_array2 + "\r\n" + trailer_row_array + "\r\n"
     end
   end
 end

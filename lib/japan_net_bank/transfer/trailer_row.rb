@@ -10,17 +10,8 @@ module JapanNetBank
 
       RECORD_TYPE = '2'
 
-      validates :rows_count,
-          numericality: {
-              only_integer: true,
-              greater_than_or_equal_to: 1
-          }
-
-      validates :total_amount,
-          numericality: {
-              only_integer: true,
-              greater_than_or_equal_to: 1
-          }
+      validates :rows_count, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
+      validates :total_amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 
       def initialize(record_type: RECORD_TYPE, rows_count: nil, total_amount: nil)
         @record_type  = record_type

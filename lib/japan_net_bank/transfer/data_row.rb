@@ -16,12 +16,7 @@ module JapanNetBank
       validates :account_type, inclusion: { in: %w(ordinary checking savings) }
       validates :number, format: { with: /\A\d{7}\z/ }
       validates :name, presence: true
-
-      validates :amount,
-          numericality: {
-              only_integer: true,
-              greater_than_or_equal_to: 1
-          }
+      validates :amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 
       def initialize(record_type: RECORD_TYPE, bank_code: nil, branch_code: nil, account_type: nil, number: nil, name: nil, amount: nil)
         @record_type  = record_type

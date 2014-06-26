@@ -5,29 +5,47 @@ require 'nkf'
 
 module JapanNetBank
   class Transfer
+    #
+    # == row_hash, row_array, row の違い
+    #
+    # row_hash = {
+    #     bank_code:    '0123',
+    #     branch_code:  '012',
+    #     account_type: 'ordinary',
+    #     number:       '0123456',
+    #     name:         'サトウキテコ',
+    #     amount:       1600,
+    # }
+    #
+    # row_array: ['1', '0123', '012', '1', '0123456', 'ｻﾄｳｷﾃｺ', '1600']
+    #
+    # row:
+    #   JapanNetBank::Transfer::DataRow オブジェクト or
+    #   JapanNetBank::Transfer::TrailerRow オブジェクト
+    #
     class << self
-      def generate(rows)
+      def generate(row_hashes)
         transfer = self.new
-        transfer.append_rows(rows)
+        transfer.append_row_hashes(row_hashes)
         transfer.append_trailer_row
 
         transfer
       end
 
       def parse_csv(csv_string)
-        transfer    = self.new
-        parsed_rows = JapanNetBank::Transfer::CSV.parse(encode_to_utf8(csv_string))
-        data_rows   = select_data_rows(parsed_rows)
+        transfer        = self.new
+        row_arrays      = JapanNetBank::Transfer::CSV.parse(encode_to_utf8(csv_string))
+        data_row_arrays = select_data_row_arrays(row_arrays)
 
-        transfer.append_data_rows(data_rows)
+        transfer.append_row_arrays(data_row_arrays)
 
         transfer
       end
 
       private
 
-      def select_data_rows(parsed_rows)
-        parsed_rows.select { |parsed_row| parsed_row[0] == JapanNetBank::Transfer::DataRow::RECORD_TYPE }
+      def select_data_row_arrays(row_arrays)
+        row_arrays.select { |row_array| row_array[0] == JapanNetBank::Transfer::DataRow::RECORD_TYPE }
       end
 
       def encode_to_utf8(string)
@@ -47,56 +65,48 @@ module JapanNetBank
     end
 
     def to_csv
-      csv_string = JapanNetBank::Transfer::CSV.generate do |csv|
+      JapanNetBank::Transfer::CSV.generate do |csv|
         @rows.each do |row|
           csv << row.to_a
         end
       end
-
-      csv_string
     end
 
-    def append_rows(rows)
-      rows.each do |row|
-        append_row(row)
+    def append_row_hashes(row_hashes)
+      row_hashes.each do |row_hash|
+        append_row_hash(row_hash)
       end
     end
 
     def append_trailer_row
       return if @rows_count.zero?
-      @rows << trailer_row
+      @rows << JapanNetBank::Transfer::TrailerRow.new(rows_count: @rows_count, total_amount: @total_amount)
     end
 
-    def append_data_rows(data_rows)
-      data_rows.each do |data_row|
-        @rows_count   += 1
-        @total_amount += data_row[6].to_i
-        @rows << JapanNetBank::Transfer::DataRow.new(data_row_to_hash(data_row))
+    def append_row_arrays(row_arrays)
+      row_arrays.each do |row_array|
+        append_row_hash(row_array_to_hash(row_array))
       end
     end
 
     private
 
-    def append_row(row)
+    def append_row_hash(row_hash)
       @rows_count   += 1
-      @total_amount += row[:amount].to_i
-      @rows << JapanNetBank::Transfer::DataRow.new(row)
+      @total_amount += row_hash[:amount].to_i
+      @rows << JapanNetBank::Transfer::DataRow.new(row_hash)
     end
 
-    def data_row_to_hash(data_row)
+    def row_array_to_hash(row_array)
       {
-          record_type:  data_row[0],
-          bank_code:    sprintf('%04d', data_row[1]),
-          branch_code:  sprintf('%03d', data_row[2]),
-          account_type: JapanNetBank::Transfer::DataRow::ACCOUNT_TYPES[data_row[3]],
-          number:       sprintf('%07d', data_row[4]),
-          name:         data_row[5],
-          amount:       data_row[6],
+          record_type:  row_array[0],
+          bank_code:    sprintf('%04d', row_array[1]),
+          branch_code:  sprintf('%03d', row_array[2]),
+          account_type: JapanNetBank::Transfer::DataRow::ACCOUNT_TYPES[row_array[3]],
+          number:       sprintf('%07d', row_array[4]),
+          name:         row_array[5],
+          amount:       row_array[6],
       }
-    end
-
-    def trailer_row
-      JapanNetBank::Transfer::TrailerRow.new(rows_count: @rows_count, total_amount: @total_amount)
     end
   end
 end
