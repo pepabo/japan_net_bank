@@ -5,6 +5,22 @@ module JapanNetBank
   class Transfer
     attr_reader :rows_count, :total_amount, :rows
 
+    FEE_TO_JAPAN_NET_BANK          = 54
+    FEE_FOR_AMOUNT_UNDER_30_000    = 172
+    FEE_FOR_AMOUNT_AND_OVER_30_000 = 270
+
+    def self.fee_for(bank_code: nil, amount: nil)
+      raise ArgumentError if bank_code.nil? || amount.nil?
+
+      if bank_code == JapanNetBank::BANK_CODE
+        FEE_TO_JAPAN_NET_BANK
+      elsif amount < 30_000
+        FEE_FOR_AMOUNT_UNDER_30_000
+      elsif amount >= 30_000
+        FEE_FOR_AMOUNT_AND_OVER_30_000
+      end
+    end
+
     def initialize(rows)
       @rows         = []
       @rows_count   = 0
@@ -30,9 +46,9 @@ module JapanNetBank
     private
 
     def append_row(row)
+      @rows << JapanNetBank::Transfer::Row.new(row).to_a
       @rows_count   += 1
       @total_amount += row[:amount].to_i
-      @rows << JapanNetBank::Transfer::Row.new(row).to_a
     end
 
     def add_trailer_row

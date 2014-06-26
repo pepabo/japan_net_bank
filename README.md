@@ -23,6 +23,12 @@
 * [操作説明｜WEB総振｜BA-PLUSオプションサービス｜BA-PLUS｜ビジネスでのご利用｜ジャパンネット銀行](http://www.japannetbank.co.jp/business/baplus/service/web_all/manual.html)
 * [csv_explain.pdf](http://www.japannetbank.co.jp/service/payment/web_all/csv_explain.pdf)
 
+また、下記に基づいて振込手数料を算出できます。
+
+* http://www.japannetbank.co.jp/web_all_baplus_manual.pdf
+* 現在、組戻手数料には対応していません
+* 手数料の変更には追随していく方針ですが、追随が遅れる可能性があります
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -38,6 +44,8 @@ Or install it yourself as:
     $ gem install japan_net_bank
 
 ## Usage
+
+### 振込用 CSV を生成
 
 ```ruby
 transfer_data = [
@@ -63,4 +71,13 @@ csv_string = JapanNetBank::Transfer.new(transfer_data).to_csv
 # or csv_string = JNB::Transfer.new(transfer_data).to_csv
 
 puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0999,099,1,0999999,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
+```
+
+### 振込手数料を算出
+
+```ruby
+transfer_fee = JapanNetBank::Transfer.fee_for(bank_code: '0123', amount: 30_000)
+# or JNB::Transfer.fee_for(bank_code: '0123', amount: 30_000)
+
+puts transfer_fee #=> 270
 ```
