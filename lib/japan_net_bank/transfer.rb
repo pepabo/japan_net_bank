@@ -14,9 +14,9 @@ module JapanNetBank
       end
 
       def parse_csv(csv_string)
-        parsed_data = JapanNetBank::Transfer::CSV.parse(encode_to_utf8(csv_string))
+        parsed_rows = JapanNetBank::Transfer::CSV.parse(encode_to_utf8(csv_string))
 
-        select_data_records(parsed_data).map { |row|
+        select_data_rows(parsed_rows).map { |row|
           JapanNetBank::Transfer::Row.new(
               record_type:  row[0],
               bank_code:    sprintf('%04d', row[1]),
@@ -31,8 +31,8 @@ module JapanNetBank
 
       private
 
-      def select_data_records(rows)
-        rows.select { |row| row[0] == JapanNetBank::Transfer::Row::RECORD_TYPE_DATA }
+      def select_data_rows(parsed_rows)
+        parsed_rows.select { |parsed_row| parsed_row[0] == JapanNetBank::Transfer::Row::RECORD_TYPE_DATA }
       end
 
       def encode_to_utf8(string)
