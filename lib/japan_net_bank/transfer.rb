@@ -5,6 +5,7 @@ require 'nkf'
 
 module JapanNetBank
   class Transfer
+
     #
     # == row_hash, row_array, row の違い
     #
@@ -23,6 +24,11 @@ module JapanNetBank
     #   JapanNetBank::Transfer::DataRow オブジェクト or
     #   JapanNetBank::Transfer::TrailerRow オブジェクト
     #
+
+    FEE_TO_JAPAN_NET_BANK          = 54
+    FEE_FOR_AMOUNT_UNDER_30_000    = 172
+    FEE_FOR_AMOUNT_AND_OVER_30_000 = 270
+
     class << self
       def generate(row_hashes)
         transfer = self.new
@@ -40,6 +46,18 @@ module JapanNetBank
         transfer.append_row_arrays(data_row_arrays)
 
         transfer
+      end
+
+      def fee_for(bank_code: nil, amount: nil)
+        raise ArgumentError if bank_code.nil? || amount.nil?
+
+        if bank_code == JapanNetBank::BANK_CODE
+          FEE_TO_JAPAN_NET_BANK
+        elsif amount < 30_000
+          FEE_FOR_AMOUNT_UNDER_30_000
+        elsif amount >= 30_000
+          FEE_FOR_AMOUNT_AND_OVER_30_000
+        end
       end
 
       private

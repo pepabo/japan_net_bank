@@ -80,6 +80,31 @@ describe JapanNetBank::Transfer do
     end
   end
 
+  describe 'self.fee_for' do
+    context 'ジャパンネット銀行への振込のとき' do
+      it '振込手数料を取得できる' do
+        transfer_fee = JapanNetBank::Transfer.fee_for(bank_code: JapanNetBank::BANK_CODE, amount: 3200)
+        expect(transfer_fee).to eq JapanNetBank::Transfer::FEE_TO_JAPAN_NET_BANK
+      end
+    end
+
+    context 'ジャパンネット銀行以外への振込のとき' do
+      context '30,000円未満の振込のとき' do
+        it '振込手数料を取得できる' do
+          transfer_fee = JapanNetBank::Transfer.fee_for(bank_code: '0123', amount: 29_999)
+          expect(transfer_fee).to eq JapanNetBank::Transfer::FEE_FOR_AMOUNT_UNDER_30_000
+        end
+      end
+
+      context '30,000円以上の振込のとき' do
+        it '振込手数料を取得できる' do
+          transfer_fee = JapanNetBank::Transfer.fee_for(bank_code: '0123', amount: 30_000)
+          expect(transfer_fee).to eq JapanNetBank::Transfer::FEE_FOR_AMOUNT_AND_OVER_30_000
+        end
+      end
+    end
+  end
+
   describe 'self.encode_to_utf8' do
     context 'Shift_JIS の文字列を渡したとき' do
       it 'UTF-8 の文字列を取得できる（全角カタカナ）' do
