@@ -58,19 +58,38 @@ transfer_data = [
         amount:       1600,
     },
     {
-        bank_code:    '0999',
-        branch_code:  '099',
+        bank_code:    '0234',
+        branch_code:  '023',
         account_type: 'ordinary',
-        number:       '0999999',
+        number:       '0234567',
         name:         'サトウハナコ',
         amount:       3200,
     }
 ]
 
-csv_string = JapanNetBank::Transfer.new(transfer_data).to_csv
-# or csv_string = JNB::Transfer.new(transfer_data).to_csv
+csv_string = JapanNetBank::Transfer.generate(transfer_data).to_csv
+# or csv_string = JNB::Transfer.generate(transfer_data).to_csv
 
-puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0999,099,1,0999999,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
+puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0234,023,1,0234567,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
+```
+
+### 振込用 CSV を取込
+
+```ruby
+puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0234,023,1,0234567,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
+
+transfer = JapanNetBank::Transfer.parse_csv(csv_string)
+# or rows = JNB::Transfer.parse_csv(csv_string)
+
+transfer.rows.each do |row|
+  puts row.record_type  #=> "1"
+  puts row.bank_code    #=> "0123"
+  puts row.branch_code  #=> "012"
+  puts row.account_type #=> "ordinary" # ordinary / checking / savings
+  puts row.number       #=> "0123456"
+  puts row.name         #=> "サトウキテコ"
+  puts row.amount       #=> 1600
+end
 ```
 
 ### 振込手数料を算出
