@@ -15,8 +15,8 @@ module JapanNetBank
 
       def initialize(record_type: RECORD_TYPE, rows_count: nil, total_amount: nil)
         @record_type  = record_type
-        @rows_count   = rows_count
-        @total_amount = total_amount
+        @rows_count   = rows_count.to_i
+        @total_amount = total_amount.to_i
 
         raise ArgumentError, errors.full_messages unless valid?
       end

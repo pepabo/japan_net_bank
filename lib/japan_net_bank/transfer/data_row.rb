@@ -25,7 +25,7 @@ module JapanNetBank
         @account_type = account_type
         @number       = number
         @name         = name
-        @amount       = amount
+        @amount       = amount.to_i
 
         raise ArgumentError, errors.full_messages unless valid?
       end
