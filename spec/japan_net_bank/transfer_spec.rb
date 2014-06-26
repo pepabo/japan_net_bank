@@ -30,16 +30,19 @@ describe JapanNetBank::Transfer do
 
   describe 'self.generate' do
     context '振込データが正しいとき' do
-      it 'トレーラー行が追加されたデータを生成できる' do
-        row1 = JapanNetBank::Transfer::Row.new(row_hash1).to_a
-        row2 = JapanNetBank::Transfer::Row.new(row_hash2).to_a
+      it 'データ行とトレーラー行が追加されたデータを生成できる' do
+        row1        = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::Row::RECORD_TYPE_DATA }
+        trailer_row = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::TrailerRow::RECORD_TYPE }
 
-        trailer_row = [
-            JapanNetBank::Transfer::Row::RECORD_TYPE_TRAILER,
-            nil, nil, nil, nil, 2, 4800
-        ]
+        expect(row1.bank_code).to eq '0123'
+        expect(row1.branch_code).to eq '012'
+        expect(row1.account_type).to eq 'ordinary'
+        expect(row1.number).to eq '0123456'
+        expect(row1.name).to eq 'サトウキテコ'
+        expect(row1.amount).to eq 1600
 
-        expect(transfer.rows).to eq [row1, row2, trailer_row]
+        expect(trailer_row.rows_count).to eq 2
+        expect(trailer_row.total_amount).to eq 4800
       end
     end
 

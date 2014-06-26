@@ -1,4 +1,5 @@
 require 'japan_net_bank/transfer/row'
+require 'japan_net_bank/transfer/trailer_row'
 require 'japan_net_bank/transfer/csv'
 require 'nkf'
 
@@ -48,7 +49,7 @@ module JapanNetBank
     def to_csv
       csv_string = JapanNetBank::Transfer::CSV.generate do |csv|
         @rows.each do |row|
-          csv << row
+          csv << row.to_a
         end
       end
 
@@ -81,7 +82,7 @@ module JapanNetBank
     def append_row(row)
       @rows_count   += 1
       @total_amount += row[:amount].to_i
-      @rows << JapanNetBank::Transfer::Row.new(row).to_a
+      @rows << JapanNetBank::Transfer::Row.new(row)
     end
 
     def data_row_to_hash(data_row)
@@ -97,7 +98,7 @@ module JapanNetBank
     end
 
     def trailer_row
-      [Row::RECORD_TYPE_TRAILER, nil, nil, nil, nil, @rows_count, @total_amount]
+      JapanNetBank::Transfer::TrailerRow.new(rows_count: @rows_count, total_amount: @total_amount)
     end
   end
 end
