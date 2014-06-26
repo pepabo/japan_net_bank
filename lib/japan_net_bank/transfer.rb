@@ -33,7 +33,6 @@ module JapanNetBank
       def generate(row_hashes)
         transfer = self.new
         transfer.append_row_hashes(row_hashes)
-        transfer.append_trailer_row
 
         transfer
       end
@@ -83,6 +82,8 @@ module JapanNetBank
     end
 
     def to_csv
+      append_trailer_row
+
       JapanNetBank::Transfer::CSV.generate do |csv|
         @rows.each do |row|
           csv << row.to_a
@@ -94,11 +95,6 @@ module JapanNetBank
       row_hashes.each do |row_hash|
         append_row_hash(row_hash)
       end
-    end
-
-    def append_trailer_row
-      return if @rows_count.zero?
-      @rows << JapanNetBank::Transfer::TrailerRow.new(rows_count: @rows_count, total_amount: @total_amount)
     end
 
     def append_row_arrays(row_arrays)
@@ -125,6 +121,11 @@ module JapanNetBank
           name:         row_array[5],
           amount:       row_array[6],
       }
+    end
+
+    def append_trailer_row
+      return if @rows_count.zero?
+      @rows << JapanNetBank::Transfer::TrailerRow.new(rows_count: @rows_count, total_amount: @total_amount)
     end
   end
 end
