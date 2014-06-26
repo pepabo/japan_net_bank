@@ -76,7 +76,7 @@ describe JapanNetBank::Transfer do
       expect(row1.account_type).to eq 'ordinary'
       expect(row1.number).to eq '1111111'
       expect(row1.name).to eq 'カ)ニホンシヨウジ'
-      expect(row1.amount).to eq '1000'
+      expect(row1.amount).to eq 1000
     end
   end
 
