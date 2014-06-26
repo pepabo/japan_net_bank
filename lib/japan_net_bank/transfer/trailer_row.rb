@@ -1,4 +1,3 @@
-require 'nkf'
 require 'active_model'
 
 module JapanNetBank
