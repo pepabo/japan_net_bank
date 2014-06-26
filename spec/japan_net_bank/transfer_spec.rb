@@ -25,10 +25,10 @@ describe JapanNetBank::Transfer do
   }
 
   let(:rows) { [row_hash1, row_hash2] }
-  let(:transfer) { JapanNetBank::Transfer.new(rows) }
+  let(:transfer) { JapanNetBank::Transfer.generate(rows) }
   let(:transfer_data) { File.read('spec/files/sample_jnb.csv') } # Shift_JIS
 
-  describe '#initialize' do
+  describe 'self.generate' do
     context '振込データが正しいとき' do
       it 'トレーラー行が追加されたデータを生成できる' do
         row1 = JapanNetBank::Transfer::Row.new(row_hash1).to_a
@@ -57,7 +57,7 @@ describe JapanNetBank::Transfer do
 
       it 'ArgumentError が発生する' do
         expect {
-          JapanNetBank::Transfer.new([invalid_row_hash])
+          JapanNetBank::Transfer.generate([invalid_row_hash])
         }.to raise_error(ArgumentError)
       end
     end

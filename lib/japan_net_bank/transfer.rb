@@ -5,6 +5,18 @@ require 'nkf'
 module JapanNetBank
   class Transfer
     class << self
+      def generate(rows)
+        transfer = self.new
+
+        rows.each do |row|
+          transfer.append_row(row)
+        end
+
+        transfer.add_trailer_row
+
+        transfer
+      end
+
       def parse_csv(csv_string)
         parsed_data = JapanNetBank::Transfer::CSV.parse(encode_to_utf8(csv_string))
 
@@ -37,16 +49,10 @@ module JapanNetBank
 
     attr_reader :rows_count, :total_amount, :rows
 
-    def initialize(rows)
+    def initialize
       @rows         = []
       @rows_count   = 0
       @total_amount = 0
-
-      rows.each do |row|
-        append_row(row)
-      end
-
-      add_trailer_row
     end
 
     def to_csv
@@ -59,8 +65,6 @@ module JapanNetBank
       csv_string
     end
 
-    private
-
     def append_row(row)
       @rows_count   += 1
       @total_amount += row[:amount].to_i
@@ -71,6 +75,8 @@ module JapanNetBank
       return if @rows_count.zero?
       @rows << trailer_row
     end
+
+    private
 
     def trailer_row
       [Row::RECORD_TYPE_TRAILER, nil, nil, nil, nil, @rows_count, @total_amount]

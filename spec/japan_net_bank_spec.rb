@@ -18,7 +18,7 @@ describe JapanNetBank do
     ]
 
     expect {
-      JNB::Transfer.new(rows).to_csv
+      JNB::Transfer.generate(rows).to_csv
     }.not_to raise_error
   end
 end
