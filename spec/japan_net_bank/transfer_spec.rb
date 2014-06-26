@@ -65,7 +65,7 @@ describe JapanNetBank::Transfer do
 
   describe 'self.parse_csv' do
     it 'CSV データを読み込むことができる' do
-      transfer_row = JapanNetBank::Transfer.parse_csv(transfer_data).first
+      transfer_row = JapanNetBank::Transfer.parse_csv(transfer_data).rows.first
 
       expect(transfer_row.record_type).to eq '1'
       expect(transfer_row.bank_code).to eq '0033'

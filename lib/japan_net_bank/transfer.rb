@@ -14,19 +14,13 @@ module JapanNetBank
       end
 
       def parse_csv(csv_string)
+        transfer    = self.new
         parsed_rows = JapanNetBank::Transfer::CSV.parse(encode_to_utf8(csv_string))
+        data_rows   = select_data_rows(parsed_rows)
 
-        select_data_rows(parsed_rows).map { |row|
-          JapanNetBank::Transfer::Row.new(
-              record_type:  row[0],
-              bank_code:    sprintf('%04d', row[1]),
-              branch_code:  sprintf('%03d', row[2]),
-              account_type: JapanNetBank::Transfer::Row::ACCOUNT_TYPES[row[3]],
-              number:       sprintf('%07d', row[4]),
-              name:         row[5],
-              amount:       row[6],
-          )
-        }
+        transfer.append_data_rows(data_rows)
+
+        transfer
       end
 
       private
@@ -67,18 +61,40 @@ module JapanNetBank
       end
     end
 
+    def append_trailer_row
+      return if @rows_count.zero?
+      @rows << trailer_row
+    end
+
+    def append_data_rows(data_rows)
+      data_rows.each do |data_row|
+        @rows_count   += 1
+        @total_amount += data_row[6].to_i
+
+        # TODO: rows の中身が array だったり、Row オブジェクトだったりするので整理する
+        @rows << JapanNetBank::Transfer::Row.new(data_row_to_hash(data_row))
+      end
+    end
+
+    private
+
     def append_row(row)
       @rows_count   += 1
       @total_amount += row[:amount].to_i
       @rows << JapanNetBank::Transfer::Row.new(row).to_a
     end
 
-    def append_trailer_row
-      return if @rows_count.zero?
-      @rows << trailer_row
+    def data_row_to_hash(data_row)
+      {
+          record_type:  data_row[0],
+          bank_code:    sprintf('%04d', data_row[1]),
+          branch_code:  sprintf('%03d', data_row[2]),
+          account_type: JapanNetBank::Transfer::Row::ACCOUNT_TYPES[data_row[3]],
+          number:       sprintf('%07d', data_row[4]),
+          name:         data_row[5],
+          amount:       data_row[6],
+      }
     end
-
-    private
 
     def trailer_row
       [Row::RECORD_TYPE_TRAILER, nil, nil, nil, nil, @rows_count, @total_amount]
