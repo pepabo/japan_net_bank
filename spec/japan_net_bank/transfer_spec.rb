@@ -31,7 +31,7 @@ describe JapanNetBank::Transfer do
   describe 'self.generate' do
     context '振込データが正しいとき' do
       it 'データ行とトレーラー行が追加されたデータを生成できる' do
-        row1        = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::Row::RECORD_TYPE_DATA }
+        row1        = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::DataRow::RECORD_TYPE }
         trailer_row = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::TrailerRow::RECORD_TYPE }
 
         expect(row1.bank_code).to eq '0123'
@@ -111,11 +111,11 @@ describe JapanNetBank::Transfer do
 
   describe '#to_csv' do
     it 'CSV 文字列を取得できる' do
-      csv_row1 = JapanNetBank::Transfer::Row.new(row_hash1).to_a.join(',')
-      csv_row2 = JapanNetBank::Transfer::Row.new(row_hash2).to_a.join(',')
+      csv_row1 = JapanNetBank::Transfer::DataRow.new(row_hash1).to_a.join(',')
+      csv_row2 = JapanNetBank::Transfer::DataRow.new(row_hash2).to_a.join(',')
 
       csv_trailer_row = [
-          JapanNetBank::Transfer::Row::RECORD_TYPE_TRAILER,
+          JapanNetBank::Transfer::TrailerRow::RECORD_TYPE,
           nil, nil, nil, nil, 2, 4800
       ].join(',')
 

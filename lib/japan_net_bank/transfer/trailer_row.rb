@@ -22,8 +22,8 @@ module JapanNetBank
               greater_than_or_equal_to: 1
           }
 
-      def initialize(rows_count: nil, total_amount: nil)
-        @record_type  = RECORD_TYPE
+      def initialize(record_type: RECORD_TYPE, rows_count: nil, total_amount: nil)
+        @record_type  = record_type
         @rows_count   = rows_count
         @total_amount = total_amount
 

@@ -1,4 +1,4 @@
-require 'japan_net_bank/transfer/row'
+require 'japan_net_bank/transfer/data_row'
 require 'japan_net_bank/transfer/trailer_row'
 require 'japan_net_bank/transfer/csv'
 require 'nkf'
@@ -27,7 +27,7 @@ module JapanNetBank
       private
 
       def select_data_rows(parsed_rows)
-        parsed_rows.select { |parsed_row| parsed_row[0] == JapanNetBank::Transfer::Row::RECORD_TYPE_DATA }
+        parsed_rows.select { |parsed_row| parsed_row[0] == JapanNetBank::Transfer::DataRow::RECORD_TYPE }
       end
 
       def encode_to_utf8(string)
@@ -71,9 +71,7 @@ module JapanNetBank
       data_rows.each do |data_row|
         @rows_count   += 1
         @total_amount += data_row[6].to_i
-
-        # TODO: rows の中身が array だったり、Row オブジェクトだったりするので整理する
-        @rows << JapanNetBank::Transfer::Row.new(data_row_to_hash(data_row))
+        @rows << JapanNetBank::Transfer::DataRow.new(data_row_to_hash(data_row))
       end
     end
 
@@ -82,7 +80,7 @@ module JapanNetBank
     def append_row(row)
       @rows_count   += 1
       @total_amount += row[:amount].to_i
-      @rows << JapanNetBank::Transfer::Row.new(row)
+      @rows << JapanNetBank::Transfer::DataRow.new(row)
     end
 
     def data_row_to_hash(data_row)
@@ -90,7 +88,7 @@ module JapanNetBank
           record_type:  data_row[0],
           bank_code:    sprintf('%04d', data_row[1]),
           branch_code:  sprintf('%03d', data_row[2]),
-          account_type: JapanNetBank::Transfer::Row::ACCOUNT_TYPES[data_row[3]],
+          account_type: JapanNetBank::Transfer::DataRow::ACCOUNT_TYPES[data_row[3]],
           number:       sprintf('%07d', data_row[4]),
           name:         data_row[5],
           amount:       data_row[6],

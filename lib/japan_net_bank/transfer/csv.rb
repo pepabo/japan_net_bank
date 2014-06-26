@@ -5,7 +5,7 @@ module JapanNetBank
     class CSV
       def self.generate
         csv = ::CSV.new('', row_sep: "\r\n")
-        yield csv
+        yield(csv)
         csv.string
       end
 
