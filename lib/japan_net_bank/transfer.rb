@@ -7,11 +7,7 @@ module JapanNetBank
     class << self
       def generate(rows)
         transfer = self.new
-
-        rows.each do |row|
-          transfer.append_row(row)
-        end
-
+        transfer.append_rows(rows)
         transfer.append_trailer_row
 
         transfer
@@ -63,6 +59,12 @@ module JapanNetBank
       end
 
       csv_string
+    end
+
+    def append_rows(rows)
+      rows.each do |row|
+        append_row(row)
+      end
     end
 
     def append_row(row)
