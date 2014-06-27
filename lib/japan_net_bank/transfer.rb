@@ -92,22 +92,22 @@ module JapanNetBank
 
     def append_row_hashes(row_hashes)
       row_hashes.each do |row_hash|
-        append_row_hash(row_hash)
+        append_row(JapanNetBank::Transfer::Row.new(row_hash))
       end
     end
 
     def append_row_arrays(row_arrays)
       row_arrays.each do |row_array|
-        append_row_hash(row_array_to_hash(row_array))
+        append_row(JapanNetBank::Transfer::Row.new(row_array_to_hash(row_array)))
       end
     end
 
     private
 
-    def append_row_hash(row_hash)
+    def append_row(row)
+      @rows << row
       @rows_count   += 1
-      @total_amount += row_hash[:amount].to_i
-      @rows << JapanNetBank::Transfer::Row.new(row_hash)
+      @total_amount += row.amount
     end
 
     def row_array_to_hash(row_array)
