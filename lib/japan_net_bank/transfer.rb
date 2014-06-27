@@ -85,16 +85,6 @@ module JapanNetBank
       @total_amount = 0
     end
 
-    def to_csv
-      JapanNetBank::Transfer::CSV.generate do |csv|
-        @rows.each do |row|
-          csv << row.to_a
-        end
-
-        csv << trailer_row if @rows_count > 0
-      end
-    end
-
     def append_row_hashes(row_hashes)
       row_hashes.each do |row_hash|
         append_row(JapanNetBank::Transfer::Row.new(row_hash))
@@ -107,13 +97,27 @@ module JapanNetBank
       end
     end
 
+    def <<(row)
+      append_row(row)
+    end
+
+    def to_csv
+      JapanNetBank::Transfer::CSV.generate do |csv|
+        @rows.each do |row|
+          csv << row.to_a
+        end
+
+        csv << trailer_row if @rows_count > 0
+      end
+    end
+
+    private
+
     def append_row(row)
       @rows << row
       @rows_count   += 1
       @total_amount += row.amount
     end
-
-    private
 
     def row_array_to_hash(row_array)
       {

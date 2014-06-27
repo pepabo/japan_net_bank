@@ -70,8 +70,8 @@ describe JapanNetBank::Transfer do
 
       it 'Transfer#rows に Row オブジェクトが追加される' do
         transfer = JapanNetBank::Transfer.generate do |t|
-          t.append_row(row1)
-          t.append_row(row2)
+          t << row1
+          t << row2
         end
 
         data_row1 = transfer.rows.first
