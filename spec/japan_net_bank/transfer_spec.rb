@@ -31,7 +31,7 @@ describe JapanNetBank::Transfer do
   describe 'self.generate' do
     context '振込データが正しいとき' do
       it 'データ行が追加されたデータを生成できる' do
-        data_row1   = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::DataRow::RECORD_TYPE }
+        data_row1 = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::DataRow::RECORD_TYPE }
 
         expect(data_row1.bank_code).to eq '0123'
         expect(data_row1.branch_code).to eq '012'
@@ -135,13 +135,9 @@ describe JapanNetBank::Transfer do
 
   describe '#to_csv' do
     it 'CSV 文字列を取得できる' do
-      row_array1 = JapanNetBank::Transfer::DataRow.new(row_hash1).to_a.join(',')
-      row_array2 = JapanNetBank::Transfer::DataRow.new(row_hash2).to_a.join(',')
-
-      trailer_row_array = [
-          JapanNetBank::Transfer::TrailerRow::RECORD_TYPE,
-          nil, nil, nil, nil, 2, 4800
-      ].join(',')
+      row_array1        = JapanNetBank::Transfer::DataRow.new(row_hash1).to_a.join(',')
+      row_array2        = JapanNetBank::Transfer::DataRow.new(row_hash2).to_a.join(',')
+      trailer_row_array = ['2', nil, nil, nil, nil, 2, 4800].join(',')
 
       expect(transfer.to_csv).to eq row_array1 + "\r\n" + row_array2 + "\r\n" + trailer_row_array + "\r\n"
     end

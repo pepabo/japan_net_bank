@@ -1,5 +1,4 @@
 require 'japan_net_bank/transfer/data_row'
-require 'japan_net_bank/transfer/trailer_row'
 require 'japan_net_bank/transfer/csv'
 require 'nkf'
 
@@ -82,12 +81,12 @@ module JapanNetBank
     end
 
     def to_csv
-      append_trailer_row
-
       JapanNetBank::Transfer::CSV.generate do |csv|
         @rows.each do |row|
           csv << row.to_a
         end
+
+        csv << trailer_row if @rows_count > 0
       end
     end
 
@@ -123,9 +122,8 @@ module JapanNetBank
       }
     end
 
-    def append_trailer_row
-      return if @rows_count.zero?
-      @rows << JapanNetBank::Transfer::TrailerRow.new(rows_count: @rows_count, total_amount: @total_amount)
+    def trailer_row
+      ['2', nil, nil, nil, nil, @rows_count, @total_amount]
     end
   end
 end

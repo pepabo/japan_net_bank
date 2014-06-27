@@ -45,7 +45,7 @@ Or install it yourself as:
 
 ## Usage
 
-### 振込用 CSV を生成
+### Generate CSV for transfer
 
 ```ruby
 transfer_data = [
@@ -73,7 +73,7 @@ csv_string = JapanNetBank::Transfer.generate(transfer_data).to_csv
 puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0234,023,1,0234567,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
 ```
 
-### 振込用 CSV を取込
+### Parse CSV for transfer
 
 ```ruby
 puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0234,023,1,0234567,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
@@ -92,7 +92,7 @@ transfer.rows.each do |row|
 end
 ```
 
-### 振込手数料を算出
+### Transfer fee
 
 ```ruby
 transfer_fee = JapanNetBank::Transfer.fee_for(bank_code: '0123', amount: 30_000)
