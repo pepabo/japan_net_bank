@@ -29,14 +29,16 @@ module JapanNetBank
     FEE_FOR_AMOUNT_AND_OVER_30_000 = 270
 
     class << self
-      def generate(row_hashes = nil)
+      def from_hash_array(row_hashes)
         transfer = self.new
+        transfer.append_row_hashes(row_hashes)
 
-        if row_hashes.nil?
-          yield(transfer)
-        else
-          transfer.append_row_hashes(row_hashes)
-        end
+        transfer
+      end
+
+      def generate
+        transfer = self.new
+        yield(transfer)
 
         transfer
       end

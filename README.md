@@ -67,8 +67,8 @@ transfer_data = [
     }
 ]
 
-csv_string = JapanNetBank::Transfer.generate(transfer_data).to_csv
-# or csv_string = JNB::Transfer.generate(transfer_data).to_csv
+csv_string = JapanNetBank::Transfer.from_hash_array(transfer_data).to_csv
+# or csv_string = JNB::Transfer.from_hash_array(transfer_data).to_csv
 
 puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0234,023,1,0234567,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
 ```

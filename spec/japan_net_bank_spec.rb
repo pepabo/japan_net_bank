@@ -26,7 +26,7 @@ describe JapanNetBank do
     ]
 
     expect {
-      JNB::Transfer.generate(row_hashes).to_csv
+      JNB::Transfer.from_hash_array(row_hashes).to_csv
     }.not_to raise_error
   end
 end
