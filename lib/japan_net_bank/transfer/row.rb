@@ -8,8 +8,9 @@ module JapanNetBank
 
       attr_accessor :record_type, :bank_code, :branch_code, :account_type, :number, :name, :amount
 
-      RECORD_TYPE   = '1'
-      ACCOUNT_TYPES = { '1' => 'ordinary', '2' => 'checking', '4' => 'savings' }
+      RECORD_TYPE_DATA    = '1'
+      RECORD_TYPE_TRAILER = '2'
+      ACCOUNT_TYPES       = { '1' => 'ordinary', '2' => 'checking', '4' => 'savings' }
 
       validates :bank_code, format: { with: /\A\d{4}\z/ }
       validates :branch_code, format: { with: /\A\d{3}\z/ }
@@ -18,7 +19,7 @@ module JapanNetBank
       validates :name, presence: true
       validates :amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 
-      def initialize(record_type: RECORD_TYPE, bank_code: nil, branch_code: nil, account_type: nil, number: nil, name: nil, amount: nil)
+      def initialize(record_type: RECORD_TYPE_DATA, bank_code: nil, branch_code: nil, account_type: nil, number: nil, name: nil, amount: nil)
         @record_type  = record_type
         @bank_code    = bank_code
         @branch_code  = branch_code

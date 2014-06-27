@@ -156,7 +156,7 @@ describe JapanNetBank::Transfer::Row do
   describe '#to_a' do
     it 'Row の内容が配列で返ってくる' do
       row_array = [
-          JapanNetBank::Transfer::Row::RECORD_TYPE,
+          JapanNetBank::Transfer::Row::RECORD_TYPE_DATA,
           '0123', '012', '1', '0123456', 'ｻﾄｳｷﾃｺ'.encode('Shift_JIS'), '1600'
       ]
 

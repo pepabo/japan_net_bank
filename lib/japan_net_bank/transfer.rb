@@ -61,7 +61,7 @@ module JapanNetBank
       private
 
       def select_data_row_arrays(row_arrays)
-        row_arrays.select { |row_array| row_array[0] == JapanNetBank::Transfer::Row::RECORD_TYPE }
+        row_arrays.select { |row_array| row_array[0] == JapanNetBank::Transfer::Row::RECORD_TYPE_DATA }
       end
 
       def encode_to_utf8(string)
@@ -123,7 +123,7 @@ module JapanNetBank
     end
 
     def trailer_row
-      ['2', nil, nil, nil, nil, @rows_count, @total_amount]
+      [JapanNetBank::Transfer::Row::RECORD_TYPE_TRAILER, nil, nil, nil, nil, @rows_count, @total_amount]
     end
   end
 end
