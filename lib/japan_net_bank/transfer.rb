@@ -4,6 +4,7 @@ require 'nkf'
 
 module JapanNetBank
   class Transfer
+    include Enumerable
 
     #
     # == row_hash, row_array, row の違い
@@ -110,6 +111,12 @@ module JapanNetBank
         end
 
         csv << trailer_row if @rows_count > 0
+      end
+    end
+
+    def each
+      @rows.each do |row|
+        yield row
       end
     end
 

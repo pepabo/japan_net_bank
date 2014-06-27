@@ -166,4 +166,12 @@ describe JapanNetBank::Transfer do
       expect(transfer.to_csv).to eq row_array1 + "\r\n" + row_array2 + "\r\n" + trailer_row_array + "\r\n"
     end
   end
+
+  describe '#each' do
+    it 'rows を走査できる' do
+      JapanNetBank::Transfer.parse_csv(transfer_data).each do |row|
+        expect(row.class).to eq JapanNetBank::Transfer::Row
+      end
+    end
+  end
 end
