@@ -110,7 +110,7 @@ puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0234,023,
 transfer = JapanNetBank::Transfer.parse_csv(csv_string)
 # or transfer = JNB::Transfer.parse_csv(csv_string)
 
-transfer.rows.each do |row|
+transfer.each do |row|
   puts row.record_type  #=> "1"
   puts row.bank_code    #=> "0123"
   puts row.branch_code  #=> "012"
