@@ -108,7 +108,7 @@ puts transfer.to_csv #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0234
 puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0234,023,1,0234567,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
 
 transfer = JapanNetBank::Transfer.parse_csv(csv_string)
-# or rows = JNB::Transfer.parse_csv(csv_string)
+# or transfer = JNB::Transfer.parse_csv(csv_string)
 
 transfer.rows.each do |row|
   puts row.record_type  #=> "1"
@@ -125,7 +125,7 @@ end
 
 ```ruby
 transfer_fee = JapanNetBank::Transfer.fee_for(bank_code: '0123', amount: 30_000)
-# or JNB::Transfer.fee_for(bank_code: '0123', amount: 30_000)
+# or transfer_fee = JNB::Transfer.fee_for(bank_code: '0123', amount: 30_000)
 
 puts transfer_fee #=> 270
 ```
