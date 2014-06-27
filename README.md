@@ -45,7 +45,7 @@ Or install it yourself as:
 
 ## Usage
 
-### Generate CSV for transfer
+### Generate CSV for transfer (1)
 
 ```ruby
 transfer_data = [
@@ -71,6 +71,35 @@ csv_string = JapanNetBank::Transfer.generate(transfer_data).to_csv
 # or csv_string = JNB::Transfer.generate(transfer_data).to_csv
 
 puts csv_string #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0234,023,1,0234567,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
+```
+
+### Generate CSV for transfer (2)
+
+```ruby
+row1 = JapanNetBank::Transfer::Row.new(
+    bank_code:    '0123',
+    branch_code:  '012',
+    account_type: 'ordinary', # ordinary / checking / savings
+    number:       '0123456',
+    name:         'サトウキテコ',
+    amount:       1600,
+)
+
+row2 = JapanNetBank::Transfer::Row.new(
+    bank_code:    '0234',
+    branch_code:  '023',
+    account_type: 'ordinary',
+    number:       '0234567',
+    name:         'サトウハナコ',
+    amount:       3200,
+)
+
+transfer = JapanNetBank::Transfer.generate do |t|
+  t << row1
+  t << row2
+end
+
+puts transfer.to_csv #=> "1,0123,012,1,0123456,ｻﾄｳｷﾃｺ,1600\r\n1,0234,023,1,0234567,ｻﾄｳﾊﾅｺ,3200\r\n2,,,,,2,4800\r\n"
 ```
 
 ### Parse CSV for transfer
