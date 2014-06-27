@@ -3,7 +3,7 @@ require 'active_model'
 
 module JapanNetBank
   class Transfer
-    class DataRow
+    class Row
       include ActiveModel::Validations
 
       attr_accessor :record_type, :bank_code, :branch_code, :account_type, :number, :name, :amount

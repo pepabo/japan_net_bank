@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'japan_net_bank/transfer/data_row'
+require 'japan_net_bank/transfer/row'
 
-describe JapanNetBank::Transfer::DataRow do
+describe JapanNetBank::Transfer::Row do
   let(:row_hash) {
     {
         bank_code:    '0123',
@@ -13,7 +13,7 @@ describe JapanNetBank::Transfer::DataRow do
     }
   }
 
-  let(:row) { JapanNetBank::Transfer::DataRow.new(row_hash) }
+  let(:row) { JapanNetBank::Transfer::Row.new(row_hash) }
 
   describe 'attributes' do
     describe 'bank_code' do
@@ -156,7 +156,7 @@ describe JapanNetBank::Transfer::DataRow do
   describe '#to_a' do
     it 'Row の内容が配列で返ってくる' do
       row_array = [
-          JapanNetBank::Transfer::DataRow::RECORD_TYPE,
+          JapanNetBank::Transfer::Row::RECORD_TYPE,
           '0123', '012', '1', '0123456', 'ｻﾄｳｷﾃｺ'.encode('Shift_JIS'), '1600'
       ]
 
