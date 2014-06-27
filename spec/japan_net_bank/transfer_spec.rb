@@ -29,9 +29,9 @@ describe JapanNetBank::Transfer do
   let(:transfer_data) { File.read('spec/files/sample_jnb.csv') } # Shift_JIS
 
   describe 'self.generate' do
-    context '振込データが正しいとき' do
+    context '正しい振込データが引数に渡されたとき' do
       it 'データ行が追加されたデータを生成できる' do
-        data_row1 = transfer.rows.find { |row| row.record_type == JapanNetBank::Transfer::Row::RECORD_TYPE_DATA }
+        data_row1 = transfer.rows.first
 
         expect(data_row1.bank_code).to eq '0123'
         expect(data_row1.branch_code).to eq '012'
@@ -45,7 +45,7 @@ describe JapanNetBank::Transfer do
       end
     end
 
-    context '振込データのフォーマットに誤りがあるとき' do
+    context 'フォーマットの誤った振込データが引数に渡されたとき' do
       let(:invalid_row_hash) {
         {
             bank_code:    '012',
@@ -61,6 +61,30 @@ describe JapanNetBank::Transfer do
         expect {
           JapanNetBank::Transfer.generate([invalid_row_hash])
         }.to raise_error(ArgumentError)
+      end
+    end
+
+    context '引数なしで generate して Row オブジェクトを追加するとき' do
+      let(:row1) { JapanNetBank::Transfer::Row.new(row_hash1) }
+      let(:row2) { JapanNetBank::Transfer::Row.new(row_hash2) }
+
+      it 'Transfer#rows に Row オブジェクトが追加される' do
+        transfer = JapanNetBank::Transfer.generate do |t|
+          t.append_row(row1)
+          t.append_row(row2)
+        end
+
+        data_row1 = transfer.rows.first
+
+        expect(data_row1.bank_code).to eq '0123'
+        expect(data_row1.branch_code).to eq '012'
+        expect(data_row1.account_type).to eq 'ordinary'
+        expect(data_row1.number).to eq '0123456'
+        expect(data_row1.name).to eq 'サトウキテコ'
+        expect(data_row1.amount).to eq 1600
+
+        expect(transfer.rows_count).to eq 2
+        expect(transfer.total_amount).to eq 4800
       end
     end
   end
