@@ -10,18 +10,14 @@ module JapanNetBank
 
       RECORD_TYPE_DATA    = '1'
       RECORD_TYPE_TRAILER = '2'
+      ACCOUNT_TYPES       = { '1' => 'ordinary', '2' => 'checking', '4' => 'savings' }
 
       validates :bank_code, format: { with: /\A\d{4}\z/ }
       validates :branch_code, format: { with: /\A\d{3}\z/ }
       validates :account_type, inclusion: { in: %w(ordinary checking savings) }
       validates :number, format: { with: /\A\d{7}\z/ }
       validates :name, presence: true
-
-      validates :amount,
-          numericality: {
-              only_integer: true,
-              greater_than_or_equal_to: 1
-          }
+      validates :amount, numericality: { only_integer: true, greater_than_or_equal_to: 1 }
 
       def initialize(record_type: RECORD_TYPE_DATA, bank_code: nil, branch_code: nil, account_type: nil, number: nil, name: nil, amount: nil)
         @record_type  = record_type
@@ -30,7 +26,7 @@ module JapanNetBank
         @account_type = account_type
         @number       = number
         @name         = name
-        @amount       = amount
+        @amount       = amount.to_i
 
         raise ArgumentError, errors.full_messages unless valid?
       end
