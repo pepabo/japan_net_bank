@@ -131,10 +131,10 @@ module JapanNetBank
     def row_array_to_hash(row_array)
       {
           record_type:  row_array[0],
-          bank_code:    sprintf('%04d', row_array[1]),
-          branch_code:  sprintf('%03d', row_array[2]),
+          bank_code:    sprintf('%04d', row_array[1].to_i),
+          branch_code:  sprintf('%03d', row_array[2].to_i),
           account_type: JapanNetBank::Transfer::Row::ACCOUNT_TYPES[row_array[3]],
-          number:       sprintf('%07d', row_array[4]),
+          number:       sprintf('%07d', row_array[4].to_i),
           name:         row_array[5],
           amount:       row_array[6],
       }
