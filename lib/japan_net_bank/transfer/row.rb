@@ -43,6 +43,12 @@ module JapanNetBank
         ]
       end
 
+      def ==(other_row)
+        [:bank_code, :branch_code,  :name, :account_type, :number, :amount].all? do |method|
+          send(method) == other_row.send(method)
+        end
+      end
+
       private
 
       def convert_to_hankaku_katakana(string)
