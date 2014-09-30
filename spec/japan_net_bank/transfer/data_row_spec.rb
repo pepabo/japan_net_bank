@@ -169,4 +169,24 @@ describe JapanNetBank::Transfer::Row do
       expect(row.send(:convert_to_hankaku_katakana, 'サトウキテコ')).to eq 'ｻﾄｳｷﾃｺ'
     end
   end
+
+  describe '#==' do
+    let(:other_row) { JapanNetBank::Transfer::Row.new(row_hash) }
+
+    context '同じ内容の振込データのとき' do
+      it 'trueが返る' do
+        expect(row).to eq other_row
+      end
+    end
+
+    context '振込額が異なるとき' do
+      before do
+        other_row.amount = row.amount-1
+      end
+
+      it 'falseが返る' do
+        expect(row).not_to eq other_row
+      end
+    end
+  end
 end
