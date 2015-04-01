@@ -4,7 +4,7 @@ module JapanNetBank
   class Transfer
     class CSV
       def self.generate
-        csv = ::CSV.new('', row_sep: "\r\n")
+        csv = ::CSV.new('', row_sep: "\r\n", force_quotes: true)
         yield(csv)
         csv.string
       end
