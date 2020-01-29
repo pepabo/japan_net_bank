@@ -4,9 +4,9 @@ module JapanNetBank
   class Transfer
     class CSV
       def self.generate
-        csv = ::CSV.new('', row_sep: "\r\n")
-        yield(csv)
-        csv.string
+        ::CSV.generate(row_sep: "\r\n", encoding: Encoding::Shift_JIS) do |csv|
+          yield(csv)
+        end
       end
 
       def self.parse(csv_string)
