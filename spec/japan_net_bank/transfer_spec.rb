@@ -158,12 +158,15 @@ describe JapanNetBank::Transfer do
   end
 
   describe '#to_csv' do
-    it 'CSV 文字列を取得できる' do
+    it 'Shift JIS の CSV 文字列を取得できる' do
       row_array1        = JapanNetBank::Transfer::Row.new(row_hash1).to_a.join(',')
       row_array2        = JapanNetBank::Transfer::Row.new(row_hash2).to_a.join(',')
       trailer_row_array = [JapanNetBank::Transfer::Row::RECORD_TYPE_TRAILER, nil, nil, nil, nil, 2, 4800].join(',')
 
-      expect(transfer.to_csv).to eq row_array1 + "\r\n" + row_array2 + "\r\n" + trailer_row_array + "\r\n"
+      csv = transfer.to_csv
+
+      expect(csv).to eq row_array1 + "\r\n" + row_array2 + "\r\n" + trailer_row_array + "\r\n"
+      expect(csv.encoding).to eq Encoding::Shift_JIS
     end
   end
 
