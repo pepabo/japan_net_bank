@@ -168,6 +168,51 @@ describe JapanNetBank::Transfer do
       expect(csv).to eq row_array1 + "\r\n" + row_array2 + "\r\n" + trailer_row_array + "\r\n"
       expect(csv.encoding).to eq Encoding::Shift_JIS
     end
+
+    describe 'name_length_limit オプション' do
+      context '指定した場合' do
+        let(:row_hashes) do
+          common = {
+            bank_code:    '0123',
+            branch_code:  '012',
+            account_type: 'ordinary',
+            number:       '0123456',
+            amount:       3200,
+          }
+
+          names = ['サトウハナコ', 'カ)ニホンシヨウジ', 'タブチ']
+
+          names.map {|name| common.merge(name: name) }
+        end
+
+        it '口座名義の長さを制限できる' do
+          csv = transfer.to_csv(name_length_limit: 2)
+
+          expect(csv).to include ',' + 'ｻﾄ'.encode('Shift_JIS') + ','
+          expect(csv).to include ',' + 'ｶ)'.encode('Shift_JIS') + ','
+          expect(csv).to include ',' + 'ﾀﾌ'.encode('Shift_JIS') + ','
+        end
+      end
+
+      context '無指定の場合' do
+        let(:row_hashes) do
+          [{
+            bank_code:    '0123',
+            branch_code:  '012',
+            account_type: 'ordinary',
+            number:       '0123456',
+            name:         'ア' * 50,
+            amount:       3200,
+          }]
+        end
+
+        it '48 文字で切る' do
+          csv = transfer.to_csv
+
+          expect(csv).to include ',' + ('ｱ' * 48).encode('Shift_JIS') + ','
+        end
+      end
+    end
   end
 
   describe '#each' do
