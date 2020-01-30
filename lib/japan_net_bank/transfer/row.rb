@@ -31,15 +31,17 @@ module JapanNetBank
         raise ArgumentError, errors.full_messages unless valid?
       end
 
-      def to_a
+      def to_a(name_length_limit: 48)
+        name = convert_to_hankaku_katakana(@name).slice(0, name_length_limit)
+
         [
-            @record_type,
-            @bank_code,
-            @branch_code,
-            account_type_code,
-            @number,
-            convert_to_hankaku_katakana(@name).encode('Shift_JIS'),
-            @amount.to_s,
+          @record_type,
+          @bank_code,
+          @branch_code,
+          account_type_code,
+          @number,
+          name.encode('Shift_JIS'),
+          @amount.to_s,
         ]
       end
 

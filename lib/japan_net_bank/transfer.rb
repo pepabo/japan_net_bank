@@ -104,10 +104,10 @@ module JapanNetBank
       append_row(row)
     end
 
-    def to_csv
+    def to_csv(opts = {})
       JapanNetBank::Transfer::CSV.generate do |csv|
         @rows.each do |row|
-          csv << row.to_a
+          csv << row.to_a(**opts)
         end
 
         csv << trailer_row if @rows_count > 0
